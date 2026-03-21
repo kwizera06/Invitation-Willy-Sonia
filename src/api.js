@@ -1,26 +1,25 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api/rsvp';
+// Replace this with your Google Apps Script Web App URL after deployment
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKg8SlZDdOYNMp37NPeg4OsI7XiEtNvKlVH4ugq1AkpLX34qJbqIHruIa94EJ1e9wB/exec';
 
-// Public API — no auth needed
-export const submitRsvp = (data) => axios.post(BASE_URL, data);
+// Handle RSVP Submission (POST)
+export const submitRsvp = (data) =>
+  axios.post(GOOGLE_SCRIPT_URL, JSON.stringify(data), {
+    headers: { 'Content-Type': 'text/plain' } // Essential for Apps Script
+  });
 
-// Admin API helpers — pass base64 credentials
-const adminHeaders = (username, password) => ({
-  headers: {
-    Authorization: 'Basic ' + btoa(`${username}:${password}`),
-    'Content-Type': 'application/json',
-  },
-});
+// Handle Fetching Guests for Dashboard (GET)
+export const getAllGuests = () =>
+  axios.get(GOOGLE_SCRIPT_URL);
 
-export const verifyAdmin = (username, password) =>
-  axios.get(BASE_URL, adminHeaders(username, password));
+// Admin functionality (Simplified)
+export const verifyAdmin = (user, pass) => {
+  // For serverless, we can check against hardcoded values or sheet settings
+  if (user === 'Willy' && pass === 'Sonia') return Promise.resolve({ data: 'success' });
+  return Promise.reject({ response: { status: 401 } });
+};
 
-export const getAllGuests = (username, password) =>
-  axios.get(BASE_URL, adminHeaders(username, password));
-
-export const acceptGuest = (id, username, password) =>
-  axios.put(`${BASE_URL}/${id}/accept`, {}, adminHeaders(username, password));
-
-export const rejectGuest = (id, username, password) =>
-  axios.put(`${BASE_URL}/${id}/reject`, {}, adminHeaders(username, password));
+// Accept/Reject are handled via the Google Sheet directly for total serverless simplicity
+export const acceptGuest = () => Promise.resolve();
+export const rejectGuest = () => Promise.resolve();
