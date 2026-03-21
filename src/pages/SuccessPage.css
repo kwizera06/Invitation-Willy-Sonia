@@ -1,0 +1,51 @@
+/* ===== Success Page ===== */
+.success-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    background: transparent;
+}
+
+.success-card {
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    background: transparent;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+    display: block;
+}
+
+.success-card h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.success-message {
+    font-size: 1.1rem;
+    color: var(--dark-mid);
+    line-height: 1.8;
+    margin: 16px 0 12px;
+}
+
+.success-sub {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
