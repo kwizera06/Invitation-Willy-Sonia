@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './InvitationPage.css';
 
-const WEDDING_DATE = new Date('2026-07-26T14:00:00');
+const WEDDING_DATE = new Date('2026-07-26T13:00:00');
 
 function Countdown() {
     const [timeLeft, setTimeLeft] = useState({});
@@ -43,52 +43,78 @@ export default function InvitationPage() {
             {/* Hero */}
             <section className="hero-section">
                 <div className="hero-content fade-in-up">
-                    <p className="hero-pre">You are cordially invited to</p>
+                    <p className="bible-verse">
+                        &ldquo;Therefore what God has joined together, let no one separate.&rdquo;
+                        <br />
+                        <span className="verse-ref">Mark 10:9</span>
+                    </p>
+                    <p className="hero-pre">The families of</p>
+                    <p className="family-names">UWIMANA Dieudonne &amp; NZABANDORA Malachie</p>
+                    <p className="hero-pre">are pleased to invite you to the wedding of their children</p>
+
                     <h1 className="hero-names">
-                        <span>Sonia</span>
+                        <span>Sonia Uwimana</span>
                         <span className="hero-ampersand">&amp;</span>
-                        <span>William</span>
+                        <span>William Rukundo</span>
                     </h1>
-                    <p className="hero-surname">Uwimana · Rukundo</p>
+
                     <div className="divider"><span className="diamond">◆</span></div>
-                    <p className="hero-date">July 26, 2026</p>
-                    <p className="hero-location">📍 Kigali, Rwanda</p>
+                    <p className="hero-date">ON JULY 26TH, 2026</p>
+                    <p className="hero-location">
+                        At Le Belvedere<br />
+                        40 des sentier, Wakefield, QC, J0X 3G0
+                    </p>
                 </div>
             </section>
 
-            {/* Invitation message */}
-            <section className="message-section">
+            {/* Schedule Section */}
+            <section className="schedule-section fade-in-up">
                 <div className="container">
-                    <blockquote className="invitation-quote fade-in-up">
-                        <p>
-                            &ldquo;Together with their families,<br />
-                            <strong>  Sonia Uwimana &amp; William Rukundo</strong><br />
-                            joyfully invite you to celebrate their wedding.<br />
-                            Your presence will make our day truly special.&rdquo;
-                        </p>
-                    </blockquote>
+                    <h2 className="section-title">✨ Order of Events ✨</h2>
+                    <div className="schedule-grid">
+                        <div className="schedule-item">
+                            <span className="time">1:00 PM</span>
+                            <span className="event">🌿 Introduction and Dowry</span>
+                        </div>
+                        <div className="schedule-item">
+                            <span className="time">5:00 PM</span>
+                            <span className="event">⛪ Religious Wedding Ceremony</span>
+                        </div>
+                        <div className="schedule-item">
+                            <span className="time">6:00 PM</span>
+                            <span className="event">🥂 Reception</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* Couple info */}
+            {/* Couple info / Contacts */}
             <section className="couple-section">
                 <div className="container">
+                    <h2 className="section-title">🌸 Contacts 🌸</h2>
                     <div className="couple-grid">
-
                         <div className="couple-card fade-in-up">
                             <div className="couple-icon">👰</div>
-                            <h3>Sonia Uwimana</h3>
-                            <p className="couple-role">Bride</p>
-                            <a href="tel:+14383088742" className="couple-phone">📞 +1 (438) 308-8742</a>
+                            <h3>Sonia</h3>
+                            <div className="phone-list">
+                                <a href="tel:+18733760044" className="couple-phone">📞 +1 (873) 376-0044</a>
+                                <a href="tel:+14386866478" className="couple-phone">📞 +1 (438) 686-6478</a>
+                                <a href="tel:+18195764250" className="couple-phone">📞 +1 (819) 576-4250</a>
+                            </div>
                         </div>
+
                         <div className="couple-hearts">
                             <span>💍</span>
                         </div>
+
                         <div className="couple-card fade-in-up">
                             <div className="couple-icon">🤵</div>
-                            <h3>William Rukundo</h3>
-                            <p className="couple-role">Groom</p>
-                            <a href="tel:+14382266238" className="couple-phone">📞 +1 (438) 226-6238</a>
+                            <h3>William</h3>
+                            <div className="phone-list">
+                                <a href="tel:+16134104707" className="couple-phone">📞 +1 (613) 410-4707</a>
+                                <a href="tel:+250788587452" className="couple-phone">📞 +250 788 587 452</a>
+                                <a href="tel:+250788805318" className="couple-phone">📞 +250 788 805 318</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,10 +123,11 @@ export default function InvitationPage() {
             {/* Countdown */}
             <section className="countdown-section">
                 <div className="container">
-                    <h2 className="section-title">Counting Down to Our Special Day</h2>
+                    <h2 className="section-title">⏳ Counting Down to Our Special Day ⏳</h2>
                     <Countdown />
                 </div>
             </section>
+
 
             {/* RSVP CTA */}
             <section className="rsvp-cta-section">
@@ -108,7 +135,7 @@ export default function InvitationPage() {
                     <div className="rsvp-cta-card card">
                         <h2>Will You Join Us?</h2>
                         <p>Please let us know if you'll be attending so we can make proper arrangements for your comfort.</p>
-                        <button className="btn btn-outline" onClick={() => navigate('/rsvp')}>
+                        <button className="btn btn-highlight pulse-animation" onClick={() => navigate('/rsvp')}>
                             💌 Confirm Attendance
                         </button>
                     </div>
@@ -123,3 +150,4 @@ export default function InvitationPage() {
         </div>
     );
 }
+

@@ -143,7 +143,7 @@ export default function RSVPForm() {
                     {/* Submit */}
                     <button
                         type="submit"
-                        className="btn btn-outline rsvp-submit"
+                        className="btn btn-highlight pulse-animation rsvp-submit"
                         disabled={loading}
                     >
                         {loading ? '⏳ Submitting…' : '💌 Submit RSVP'}

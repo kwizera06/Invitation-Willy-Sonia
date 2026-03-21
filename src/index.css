@@ -21,6 +21,9 @@
   --green: #81C784;
   --green-light: #A5D6A7;
   --green-dark: #2E7D32;
+  --sage: #889E81;
+  --sage-light: #A7B8A2;
+  --sage-dark: #5F715A;
   --dark: #FFFFFF;
   --dark-mid: #FDF8F0;
   --text-body: #ffffff;
@@ -354,13 +357,47 @@ h4 {
   animation: fadeIn 0.5s ease forwards;
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 768px) {
-  .card {
-    padding: 24px 20px;
+/* ---- Highlight Button ---- */
+.btn-highlight {
+  background: linear-gradient(135deg, var(--sage) 0%, var(--sage-dark) 100%);
+  color: #fff !important;
+  border: none !important;
+  padding: 16px 40px !important;
+  font-size: 1.1rem !important;
+  box-shadow: 0 10px 30px rgba(136, 158, 129, 0.4);
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-highlight:hover {
+  background: linear-gradient(135deg, var(--sage-light) 0%, var(--sage) 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(136, 158, 129, 0.6);
+}
+
+.pulse-animation {
+  animation: pulse-shadow 2s infinite;
+}
+
+@keyframes pulse-shadow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(136, 158, 129, 0.7);
   }
 
-  .btn {
-    padding: 12px 24px;
+  70% {
+    box-shadow: 0 0 0 15px rgba(136, 158, 129, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(136, 158, 129, 0);
   }
 }
