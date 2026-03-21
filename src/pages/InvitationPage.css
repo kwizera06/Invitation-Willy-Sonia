@@ -361,7 +361,8 @@
     }
 
     .couple-hearts {
-        order: -1;
+        order: 0;
+        margin: 20px 0;
     }
 
     .invitation-quote {

@@ -62,7 +62,7 @@ export default function InvitationPage() {
                     <blockquote className="invitation-quote fade-in-up">
                         <p>
                             &ldquo;Together with their families,<br />
-                            <strong>William Rukundo &amp; Sonia Uwimana</strong><br />
+                            <strong>  Sonia Uwimana &amp; William Rukundo</strong><br />
                             joyfully invite you to celebrate their wedding.<br />
                             Your presence will make our day truly special.&rdquo;
                         </p>

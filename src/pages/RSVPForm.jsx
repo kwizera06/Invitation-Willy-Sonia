@@ -72,7 +72,7 @@ export default function RSVPForm() {
                         <input
                             id="name"
                             type="text"
-                            placeholder="e.g. Jean Baptiste Irakoze"
+                            placeholder="e.g. Sonia Rukundo"
                             value={form.name}
                             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                         />
@@ -84,7 +84,7 @@ export default function RSVPForm() {
                         <input
                             id="phone"
                             type="tel"
-                            placeholder="e.g. +250 788 000 000"
+                            placeholder="e.g. +1 (438) 308-8742"
                             value={form.phone}
                             onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                         />
