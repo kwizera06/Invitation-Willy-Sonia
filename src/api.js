@@ -1,25 +1,20 @@
 import axios from 'axios';
 
-// Replace this with your Google Apps Script Web App URL after deployment
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKg8SlZDdOYNMp37NPeg4OsI7XiEtNvKlVH4ugq1AkpLX34qJbqIHruIa94EJ1e9wB/exec';
+// The URL for the Google Apps Script Web App
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyR6F6q_v987vS-6_H_XUfC_C2oYpizk6A4hlyT6D0-4m76U0vYfG_7M7XJz9z_Y8k/exec';
 
-// Handle RSVP Submission (POST)
-export const submitRsvp = (data) =>
-  axios.post(GOOGLE_SCRIPT_URL, JSON.stringify(data), {
-    headers: { 'Content-Type': 'text/plain' } // Essential for Apps Script
-  });
+const api = axios.create({
+  baseURL: GOOGLE_SCRIPT_URL,
+  headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+});
 
-// Handle Fetching Guests for Dashboard (GET)
-export const getAllGuests = () =>
-  axios.get(GOOGLE_SCRIPT_URL);
+export const submitRsvp = (data) => axios.post(GOOGLE_SCRIPT_URL, { action: 'submitRsvp', ...data });
+export const getAllGuests = (user, pass) => axios.post(GOOGLE_SCRIPT_URL, { action: 'getAllGuests', user, pass });
 
-// Admin functionality (Simplified)
-export const verifyAdmin = (user, pass) => {
-  // For serverless, we can check against hardcoded values or sheet settings
-  if (user === 'Willy' && pass === 'Sonia') return Promise.resolve({ data: 'success' });
-  return Promise.reject({ response: { status: 401 } });
-};
+// Simple admin verification (can just try to catch guests or have a specific ping)
+export const verifyAdmin = (user, pass) => axios.post(GOOGLE_SCRIPT_URL, { action: 'verifyAdmin', user, pass });
 
-// Accept/Reject are handled via the Google Sheet directly for total serverless simplicity
-export const acceptGuest = () => Promise.resolve();
-export const rejectGuest = () => Promise.resolve();
+export const acceptGuest = (id, user, pass) => axios.post(GOOGLE_SCRIPT_URL, { action: 'updateStatus', id, status: 'ACCEPTED', user, pass });
+export const rejectGuest = (id, user, pass) => axios.post(GOOGLE_SCRIPT_URL, { action: 'updateStatus', id, status: 'REJECTED', user, pass });
+
+export default api;

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import invitationVideo from './assets/Will&Sonia.mp4';
+import BackgroundSlider from './components/BackgroundSlider';
 import InvitationPage from './pages/InvitationPage';
 import RSVPForm from './pages/RSVPForm';
 import SuccessPage from './pages/SuccessPage';
@@ -10,13 +10,8 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        {/* Global Persistent Video Background */}
-        <div className="video-background-wrapper">
-          <video className="global-video" autoPlay muted loop playsInline>
-            <source src={invitationVideo} type="video/mp4" />
-          </video>
-          <div className="global-video-overlay" />
-        </div>
+        {/* Global Persistent Background Slider */}
+        <BackgroundSlider />
 
         <main className="content-wrapper">
           <Routes>
