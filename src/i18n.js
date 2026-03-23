@@ -65,7 +65,7 @@ const resources = {
   },
   rw: {
     translation: {
-      "bible_verse": "Icyo Imana yateranyije, umuntu ntakabatanye.",
+      "bible_verse": "Nuko icyo Imana yateranije hamwe umuntu ntakagitandukanye.",
       "verse_ref": "Mariko 10:9",
       "families_of": "Imiryango ya",
       "invite_text": "inejejwe no kubatumira mu birori by'ubukwe bw'abana babo",
