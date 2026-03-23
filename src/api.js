@@ -31,8 +31,8 @@ export const getAllGuests = (user, pass) =>
 
 export const verifyAdmin = async (user, pass) => {
   // Hardcoded Admin credentials to avoid hitting Google Sheets for login
-  const ADMIN_USER = 'admin';
-  const ADMIN_PASS = 'admin123'; // Change this if needed
+  const ADMIN_USER = 'Willy';
+  const ADMIN_PASS = 'Sonia'; // Change this if needed
 
   if (user === ADMIN_USER && pass === ADMIN_PASS) {
     return { data: { success: true } };
