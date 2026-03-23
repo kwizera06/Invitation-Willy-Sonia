@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { verifyAdmin } from '../api';
 import './LoginPage.css';
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -23,9 +25,9 @@ export default function LoginPage() {
             navigate('/admin');
         } catch (err) {
             if (err.response?.status === 401) {
-                setError('Invalid username or password.');
+                setError(t('invalid_login'));
             } else {
-                setError('Cannot connect to server. Please ensure the backend is running.');
+                setError(t('conn_error'));
             }
         } finally {
             setLoading(false);
@@ -37,17 +39,17 @@ export default function LoginPage() {
             <div className="login-container fade-in-up">
                 <div className="login-header">
                     <div className="login-icon">🔐</div>
-                    <h1>Admin Login</h1>
-                    <p>Sonia &amp; William Wedding Dashboard</p>
+                    <h1>{t('admin_login')}</h1>
+                    <p>{t('admin_dashboard_title')}</p>
                 </div>
 
                 <form className="card login-card" onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">{t('username')}</label>
                         <input
                             id="username"
                             type="text"
-                            placeholder="Enter username"
+                            placeholder={t('user_placeholder')}
                             value={credentials.username}
                             onChange={e => setCredentials(c => ({ ...c, username: e.target.value }))}
                             autoComplete="username"
@@ -55,11 +57,11 @@ export default function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">{t('password')}</label>
                         <input
                             id="password"
                             type="password"
-                            placeholder="Enter password"
+                            placeholder={t('pass_placeholder')}
                             value={credentials.password}
                             onChange={e => setCredentials(c => ({ ...c, password: e.target.value }))}
                             autoComplete="current-password"
@@ -71,12 +73,12 @@ export default function LoginPage() {
                     )}
 
                     <button type="submit" className="btn btn-outline login-btn" disabled={loading}>
-                        {loading ? '⏳ Signing in…' : '→ Sign In'}
+                        {loading ? `⏳ ${t('submitting')}` : `→ ${t('sign_in')}`}
                     </button>
 
                     <p className="login-back">
                         <a href="/" onClick={e => { e.preventDefault(); navigate('/'); }}>
-                            ← Back to Invitation
+                            ← {t('back_to_invitation')}
                         </a>
                     </p>
                 </form>

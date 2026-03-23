@@ -30,7 +30,19 @@ export default function AdminDashboard() {
         try {
             setError('');
             const res = await getAllGuests(username, password);
-            setGuests(res.data);
+
+            let parsedData = res.data;
+            if (typeof parsedData === 'string') {
+                try { parsedData = JSON.parse(parsedData); } catch (e) { }
+            }
+
+            // Handle different possible backend response structures safely
+            let finalGuests = [];
+            if (Array.isArray(parsedData)) finalGuests = parsedData;
+            else if (parsedData?.guests && Array.isArray(parsedData.guests)) finalGuests = parsedData.guests;
+            else if (parsedData?.data && Array.isArray(parsedData.data)) finalGuests = parsedData.data;
+
+            setGuests(finalGuests);
         } catch (err) {
             if (err.response?.status === 401) {
                 sessionStorage.clear();
@@ -69,9 +81,11 @@ export default function AdminDashboard() {
     };
 
     // Filter + search
-    const filtered = guests.filter(g => {
+    const validGuests = Array.isArray(guests) ? guests : [];
+
+    const filtered = validGuests.filter(g => {
         const q = search.toLowerCase();
-        const matchSearch = !q || g.name.toLowerCase().includes(q) || g.phone.includes(q);
+        const matchSearch = !q || g.name?.toLowerCase().includes(q) || g.phone?.includes(q);
         const matchAtt = filterAtt === 'all'
             || (filterAtt === 'yes' && g.attending)
             || (filterAtt === 'no' && !g.attending);
@@ -80,10 +94,10 @@ export default function AdminDashboard() {
     });
 
     const stats = {
-        total: guests.length,
-        attending: guests.filter(g => g.attending).length,
-        accepted: guests.filter(g => g.status === 'ACCEPTED').length,
-        pending: guests.filter(g => g.status === 'PENDING').length,
+        total: validGuests.length,
+        attending: validGuests.filter(g => g.attending).length,
+        accepted: validGuests.filter(g => g.status === 'ACCEPTED').length,
+        pending: validGuests.filter(g => g.status === 'PENDING').length,
     };
 
     return (

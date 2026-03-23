@@ -1,0 +1,35 @@
+.language-switcher {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+}
+
+.lang-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .language-switcher {
+    top: 1rem;
+    right: 1rem;
+  }
+}

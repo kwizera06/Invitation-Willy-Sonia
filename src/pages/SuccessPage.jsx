@@ -1,24 +1,25 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './SuccessPage.css';
 
 export default function SuccessPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     return (
         <div className="success-wrapper">
             <div className="success-card card fade-in-up">
                 <div className="success-icon">💕</div>
-                <h1>Thank You!</h1>
+                <h1>{t('thank_you')}</h1>
                 <div className="divider"><span className="diamond">◆</span></div>
                 <p className="success-message">
-                    Thank you for confirming your attendance 💕<br />
-                    We can't wait to celebrate this special day with you.
+                    {t('success_message')}
                 </p>
                 <p className="success-sub">
-                    <em>Sonia &amp; William will see you in Kigali, Rwanda</em>
+                    <em>{t('success_sub')}</em>
                 </p>
                 <div className="success-actions">
                     <button className="btn btn-outline" onClick={() => navigate('/')}>
-                        ← Back to Invitation
+                        ← {t('back_to_invitation')}
                     </button>
                 </div>
             </div>

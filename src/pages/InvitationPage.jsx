@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './InvitationPage.css';
 
 const WEDDING_DATE = new Date('2026-07-26T13:00:00');
 
 function Countdown() {
+    const { t } = useTranslation();
     const [timeLeft, setTimeLeft] = useState({});
 
     useEffect(() => {
@@ -25,7 +27,7 @@ function Countdown() {
 
     return (
         <div className="countdown">
-            {[['Days', timeLeft.days], ['Hours', timeLeft.hours], ['Mins', timeLeft.minutes], ['Secs', timeLeft.seconds]].map(([label, val]) => (
+            {[[t('days'), timeLeft.days], [t('hours'), timeLeft.hours], [t('mins'), timeLeft.minutes], [t('secs'), timeLeft.seconds]].map(([label, val]) => (
                 <div className="countdown-unit" key={label}>
                     <span className="countdown-value">{String(val ?? 0).padStart(2, '0')}</span>
                     <span className="countdown-label">{label}</span>
@@ -37,6 +39,7 @@ function Countdown() {
 
 export default function InvitationPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <div className="invitation-wrapper">
@@ -44,13 +47,13 @@ export default function InvitationPage() {
             <section className="hero-section">
                 <div className="hero-content fade-in-up">
                     <p className="bible-verse">
-                        &ldquo;Therefore what God has joined together, let no one separate.&rdquo;
+                        &ldquo;{t('bible_verse')}&rdquo;
                         <br />
-                        <span className="verse-ref">Mark 10:9</span>
+                        <span className="verse-ref">{t('verse_ref')}</span>
                     </p>
-                    <p className="hero-pre">The families of</p>
+                    <p className="hero-pre">{t('families_of')}</p>
                     <p className="family-names">UWIMANA Dieudonne &amp; NZABANDORA Malachie</p>
-                    <p className="hero-pre">are pleased to invite you to the wedding of their children</p>
+                    <p className="hero-pre">{t('invite_text')}</p>
 
                     <h1 className="hero-names">
                         <span>Sonia Uwimana</span>
@@ -59,9 +62,9 @@ export default function InvitationPage() {
                     </h1>
 
                     <div className="divider"><span className="diamond">◆</span></div>
-                    <p className="hero-date">ON JULY 26TH, 2026</p>
+                    <p className="hero-date">{t('wedding_date')}</p>
                     <p className="hero-location">
-                        At Le Belvedere<br />
+                        {t('location_at')}<br />
                         40 des sentier, Wakefield, QC, J0X 3G0
                     </p>
                 </div>
@@ -70,19 +73,19 @@ export default function InvitationPage() {
             {/* Schedule Section */}
             <section className="schedule-section fade-in-up">
                 <div className="container">
-                    <h2 className="section-title">✨ Order of Events ✨</h2>
+                    <h2 className="section-title">{t('order_events')}</h2>
                     <div className="schedule-grid">
                         <div className="schedule-item">
                             <span className="time">1:00 PM</span>
-                            <span className="event">🌿 Introduction and Dowry</span>
+                            <span className="event">{t('event_intro')}</span>
                         </div>
                         <div className="schedule-item">
                             <span className="time">5:00 PM</span>
-                            <span className="event">⛪ Religious Wedding Ceremony</span>
+                            <span className="event">{t('event_wedding')}</span>
                         </div>
                         <div className="schedule-item">
                             <span className="time">6:00 PM</span>
-                            <span className="event">🥂 Reception</span>
+                            <span className="event">{t('event_reception')}</span>
                         </div>
                     </div>
                 </div>
@@ -91,7 +94,7 @@ export default function InvitationPage() {
             {/* Couple info / Contacts */}
             <section className="couple-section">
                 <div className="container">
-                    <h2 className="section-title">🌸 Contacts 🌸</h2>
+                    <h2 className="section-title">{t('contacts')}</h2>
                     <div className="couple-grid">
                         <div className="couple-card fade-in-up">
                             <div className="couple-icon">👰</div>
@@ -123,7 +126,7 @@ export default function InvitationPage() {
             {/* Countdown */}
             <section className="countdown-section">
                 <div className="container">
-                    <h2 className="section-title">⏳ Counting Down to Our Special Day ⏳</h2>
+                    <h2 className="section-title">{t('countdown_title')}</h2>
                     <Countdown />
                 </div>
             </section>
@@ -133,10 +136,10 @@ export default function InvitationPage() {
             <section className="rsvp-cta-section">
                 <div className="container">
                     <div className="rsvp-cta-card card">
-                        <h2>Will You Join Us?</h2>
-                        <p>Please let us know if you'll be attending so we can make proper arrangements for your comfort.</p>
+                        <h2>{t('rsvp_cta_title')}</h2>
+                        <p>{t('rsvp_cta_text')}</p>
                         <button className="btn btn-highlight pulse-animation" onClick={() => navigate('/rsvp')}>
-                            💌 Confirm Attendance
+                            💌 {t('confirm_attendance')}
                         </button>
                     </div>
                 </div>
@@ -144,8 +147,8 @@ export default function InvitationPage() {
 
             {/* Footer */}
             <footer className="invitation-footer">
-                <p>With Love · Sonia &amp; William · 2026</p>
-                <button className="admin-link" onClick={() => navigate('/admin/login')}>Admin</button>
+                <p>{t('with_love')}</p>
+                <button className="admin-link" onClick={() => navigate('/admin/login')}>{t('admin')}</button>
             </footer>
         </div>
     );

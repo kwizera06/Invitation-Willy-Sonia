@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BackgroundSlider from './components/BackgroundSlider';
+import LanguageSwitcher from './components/LanguageSwitcher';
 import InvitationPage from './pages/InvitationPage';
 import RSVPForm from './pages/RSVPForm';
 import SuccessPage from './pages/SuccessPage';
@@ -10,6 +11,7 @@ function App() {
   return (
     <Router>
       <div className="app-container">
+        <LanguageSwitcher />
         {/* Global Persistent Background Slider */}
         <BackgroundSlider />
 
