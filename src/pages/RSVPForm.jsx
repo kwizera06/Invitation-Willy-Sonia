@@ -122,32 +122,51 @@ export default function RSVPForm() {
                 </div>
 
                 <form className="card rsvp-card fade-in-up" onSubmit={handleSubmit}>
-                    {/* ── Side Selection ── */}
-                    <div className="form-group">
-                        <label>{t('whose_guest')}</label>
-                        <div className="side-options">
-                            <div 
-                                className={`side-card ${side === 'willy' ? 'active' : ''}`}
-                                onClick={() => setSide('willy')}
-                            >
-                                <span className="side-emoji">🤵</span>
-                                <span className="side-label">{t('willy_side')}</span>
-                            </div>
-                            <div 
-                                className={`side-card ${side === 'sonia' ? 'active' : ''}`}
-                                onClick={() => setSide('sonia')}
-                            >
-                                <span className="side-emoji">👰</span>
-                                <span className="side-label">{t('sonia_side')}</span>
+                    {!side ? (
+                        /* ── Step 1: Side Selection ── */
+                        <div className="side-selection-step fade-in">
+                            <h2 className="step-title">{t('whose_guest')}</h2>
+                            <div className="side-options large">
+                                <div 
+                                    className="side-card"
+                                    onClick={() => setSide('willy')}
+                                >
+                                    <div className="side-card-inner">
+                                        <span className="side-emoji">🤵</span>
+                                        <span className="side-label">{t('willy_side')}</span>
+                                    </div>
+                                </div>
+                                <div 
+                                    className="side-card"
+                                    onClick={() => setSide('sonia')}
+                                >
+                                    <div className="side-card-inner">
+                                        <span className="side-emoji">👰</span>
+                                        <span className="side-label">{t('sonia_side')}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ) : (
+                        /* ── Step 2: The Rest of the Form ── */
+                        <div className="form-content fade-in">
+                            <div className="selected-side-header">
+                                <span className="selected-side-tag">
+                                    {side === 'willy' ? `🤵 ${t('willy_side')}` : `👰 ${t('sonia_side')}`}
+                                </span>
+                                <button 
+                                    type="button" 
+                                    className="change-side-btn"
+                                    onClick={() => setSide(null)}
+                                >
+                                    ✕ {t('change')}
+                                </button>
+                            </div>
+                            
+                            <div className="divider-soft" style={{ margin: '16px 0 24px 0' }}></div>
 
-                    <div className="divider-soft"></div>
-
-                    <div className={side ? 'fade-in' : 'form-disabled'}>
-                        {/* RSVP Type */}
-                        <div className="form-group">
+                            {/* RSVP Type */}
+                            <div className="form-group">
                             <label>{t('rsvp_type')}</label>
                             <div className="type-options">
                                 {RSVP_TYPES.map(type => (
@@ -313,6 +332,7 @@ export default function RSVPForm() {
                         </a>
                     </p>
                 </div>
+            )}
             </form>
             </div>
         </div>

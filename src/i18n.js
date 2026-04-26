@@ -84,7 +84,8 @@ const resources = {
       "whose_guest": "Whose guest are you?",
       "willy_side": "Willy's Side",
       "sonia_side": "Sonia's Side",
-      "error_side": "Please select whose guest you are."
+      "error_side": "Please select whose guest you are.",
+      "change": "Change"
     }
   },
   fr: {
@@ -168,7 +169,8 @@ const resources = {
       "whose_guest": "De quel côté êtes-vous ?",
       "willy_side": "Côté Willy",
       "sonia_side": "Côté Sonia",
-      "error_side": "Veuillez choisir de quel côté vous êtes."
+      "error_side": "Veuillez choisir de quel côté vous êtes.",
+      "change": "Changer"
     }
   },
   rw: {
@@ -252,7 +254,8 @@ const resources = {
       "whose_guest": "Uri umutumirwa wa nde?",
       "willy_side": "Kuruhande rwa Willy",
       "sonia_side": "Kuruhande rwa Sonia",
-      "error_side": "Hitamo uwo muntu uje mu ruhande rwe."
+      "error_side": "Hitamo uwo muntu uje mu ruhande rwe.",
+      "change": "Hindura"
     }
   }
 };

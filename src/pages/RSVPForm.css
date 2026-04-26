@@ -62,7 +62,22 @@
     animation-fill-mode: both;
 }
 
-/* --- Side Selection --- */
+/* --- Step 1: Side Selection --- */
+.side-selection-step {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--gold-dark);
+    margin-bottom: 32px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
 .side-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -70,51 +85,85 @@
     margin-bottom: 24px;
 }
 
+.side-options.large {
+    gap: 24px;
+}
+
 .side-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 24px 16px;
+    gap: 16px;
+    padding: 40px 20px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     text-align: center;
+}
+
+.side-options.large .side-card {
+    padding: 50px 24px;
 }
 
 .side-card:hover {
     border-color: var(--gold-light);
     background: var(--white);
-    transform: translateY(-3px);
-}
-
-.side-card.active {
-    background: linear-gradient(135deg, rgba(122, 158, 126, 0.05) 0%, rgba(201, 168, 76, 0.1) 100%);
-    border-color: var(--gold);
-    box-shadow: 0 10px 20px rgba(201, 168, 76, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(201, 168, 76, 0.15);
 }
 
 .side-emoji {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     line-height: 1;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
 
 .side-label {
     font-family: 'Lato', sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--text-body);
 }
 
-.form-disabled {
-    opacity: 0.35;
-    pointer-events: none;
-    filter: grayscale(1);
+/* --- Step 2: Form Header --- */
+.selected-side-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(201, 168, 76, 0.08);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+}
+
+.selected-side-tag {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.change-side-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
     transition: var(--transition);
+}
+
+.change-side-btn:hover {
+    color: #e57373;
+    background: rgba(229, 115, 115, 0.1);
 }
 
 /* --- Attendance Buttons --- */
