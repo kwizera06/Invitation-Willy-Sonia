@@ -8,26 +8,30 @@ const api = axios.create({
   headers: { 'Content-Type': 'text/plain;charset=utf-8' }
 });
 
-// Intercept responses to throw if Google Apps Script returned { error: '...' } 
-// Since GAS always returns HTTP 200, we must catch frontend-side errors manually.
-axios.interceptors.response.use(response => {
-  if (response.data && response.data.error) {
-    const err = new Error(response.data.error);
-    err.response = { data: { error: response.data.error } };
-    throw err;
+// Intercept responses to handle Google Apps Script errors and network issues
+api.interceptors.response.use(
+  response => {
+    if (response.data && response.data.error) {
+      const err = new Error(response.data.error);
+      err.response = { data: { error: response.data.error } };
+      throw err;
+    }
+    return response;
+  },
+  error => {
+    if (!error.response) {
+      // Network error (DNS, timeout, etc.)
+      return Promise.reject(new Error("Network Error: Unable to reach the server. Please check your internet or DNS (ERR_NAME_NOT_RESOLVED)."));
+    }
+    return Promise.reject(error);
   }
-  return response;
-});
+);
 
 export const submitRsvp = (data) =>
-  axios.post(GOOGLE_SCRIPT_URL, JSON.stringify({ action: 'submitRsvp', ...data }), {
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  });
+  api.post('', JSON.stringify({ action: 'submitRsvp', ...data }));
 
 export const getAllGuests = (user, pass) =>
-  axios.post(GOOGLE_SCRIPT_URL, JSON.stringify({ action: 'getAllGuests', user, pass }), {
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  });
+  api.post('', JSON.stringify({ action: 'getAllGuests', user, pass }));
 
 export const verifyAdmin = async (user, pass) => {
   // Hardcoded Admin credentials to avoid hitting Google Sheets for login
@@ -44,13 +48,12 @@ export const verifyAdmin = async (user, pass) => {
 };
 
 export const acceptGuest = (id, user, pass) =>
-  axios.post(GOOGLE_SCRIPT_URL, JSON.stringify({ action: 'updateStatus', id, status: 'ACCEPTED', user, pass }), {
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  });
+  api.post('', JSON.stringify({ action: 'updateStatus', id, status: 'ACCEPTED', user, pass }));
 
 export const rejectGuest = (id, user, pass) =>
-  axios.post(GOOGLE_SCRIPT_URL, JSON.stringify({ action: 'updateStatus', id, status: 'REJECTED', user, pass }), {
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  });
+  api.post('', JSON.stringify({ action: 'updateStatus', id, status: 'REJECTED', user, pass }));
+
+export const deleteGuest = (id, user, pass) =>
+  api.post('', JSON.stringify({ action: 'deleteGuest', id, user, pass }));
 
 export default api;

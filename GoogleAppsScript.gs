@@ -1,106 +1,135 @@
-// GoogleAppsScript.gs
+// GoogleAppsScript.gs — Updated version (redeploy required)
 
 function doPost(e) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheets()[0]; // Use the first sheet
 
-    // Parse the incoming JSON payload we sent from the frontend
+    // Parse the incoming JSON payload
     var data = JSON.parse(e.postData.contents);
     var action = data.action;
 
-    // Handle RSVP Submission
+    // ── Handle RSVP Submission ──────────────────────────────────────────
     if (action === 'submitRsvp') {
-      // Check if phone already exists
-      var rows = sheet.getDataRange().getValues();
-      if (rows.length > 1) { // Ensure there are records beyond the header
+      var guests = Array.isArray(data.guests) ? data.guests : [];
+      var rsvpType = data.rsvpType || 'individual';
+
+      if (guests.length === 0) {
+        // Fallback for older single-guest structure
+        guests = [{
+          name: data.name,
+          phone: data.phone,
+          attending: data.attending,
+          foods: data.foods
+        }];
+      }
+
+      var primaryPhone = data.phone || (guests[0] && guests[0].phone) || '';
+
+      // Check if primary phone already exists
+      if (primaryPhone) {
+        var rows = sheet.getDataRange().getValues();
         for (var i = 1; i < rows.length; i++) {
-          if (rows[i][2] == data.phone) {
-             return ContentService.createTextOutput(JSON.stringify({ error: 'You have already submitted an RSVP with this phone number.' }))
+          if (String(rows[i][2]) === String(primaryPhone)) {
+            return ContentService
+              .createTextOutput(JSON.stringify({ error: 'This phone number has already been used to RSVP.' }))
               .setMimeType(ContentService.MimeType.JSON);
           }
         }
       }
 
-      var row = [
-        new Date(), 
-        data.name, 
-        data.phone, 
-        data.attending ? 'Yes' : 'No', 
-        data.foods ? data.foods.join(', ') : '', 
-        'PENDING' // Defaults to PENDING status
-      ];
-      sheet.appendRow(row);
-      
-      return ContentService.createTextOutput(JSON.stringify({ success: true }))
-        .setMimeType(ContentService.MimeType.JSON);
-    } 
-    
-    // Handle Loading All Guests for the Dashboard
-    else if (action === 'getAllGuests') {
-      // Optionally add a check for the admin credentials here if you really wanted to,
-      // but since we bypassed the login hit earlier, we just return the guests.
+      var timestamp = new Date();
+      guests.forEach(function(g) {
+        // Explicitly coerce attending to boolean then to string
+        var attendingBool = (g.attending === true || g.attending === 'true' || g.attending === 'Yes');
+        var row = [
+          timestamp,
+          g.name || '',
+          g.phone || primaryPhone || '',
+          attendingBool ? 'Yes' : 'No',
+          g.foods ? (Array.isArray(g.foods) ? g.foods.join(', ') : g.foods) : '',
+          'PENDING',
+          rsvpType   // ← Column 7: individual | couple | family
+        ];
+        sheet.appendRow(row);
+      });
 
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── Get All Guests (Admin Dashboard) ────────────────────────────────
+    else if (action === 'getAllGuests') {
       var rows = sheet.getDataRange().getValues();
       if (rows.length <= 1) {
-         // Return empty array if only header exists
-         return ContentService.createTextOutput(JSON.stringify([]))
+        return ContentService
+          .createTextOutput(JSON.stringify([]))
           .setMimeType(ContentService.MimeType.JSON);
       }
-      
-      rows.shift(); // Remove the header row
+
+      rows.shift(); // Remove header row
       var guests = rows.map(function(row, index) {
         return {
-          id: index + 1, // Store a unique Row ID (starts from 1 corresponding to sheet row 2)
+          id: index + 1,
           timestamp: row[0],
           name: row[1],
           phone: row[2],
           attending: row[3] === 'Yes',
           foods: row[4] ? row[4].split(', ') : [],
-          status: row[5] || 'PENDING'
+          status: row[5] || 'PENDING',
+          rsvpType: row[6] || 'individual'  // ← Return rsvpType; default for old records
         };
       });
-      
-      return ContentService.createTextOutput(JSON.stringify(guests))
+
+      return ContentService
+        .createTextOutput(JSON.stringify(guests))
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Handle Updating a Guest Status (Accept or Reject)
+    // ── Update Guest Status ──────────────────────────────────────────────
     else if (action === 'updateStatus') {
-      // Ensure we have an ID to update
       if (!data.id) throw new Error('No guest ID provided');
-      
-      // Since data.id corresponds to index + 1 in the previous step,
-      // and row 1 is the header, the actual sheet row is `data.id + 1`
       var rowIndex = data.id + 1;
-      
-      // Update the status column (Column F, which is index 6)
-      var statusRange = sheet.getRange(rowIndex, 6);
-      statusRange.setValue(data.status);
+      sheet.getRange(rowIndex, 6).setValue(data.status);
 
-      return ContentService.createTextOutput(JSON.stringify({ success: true }))
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    
-    // Fallback if no matching action
-    return ContentService.createTextOutput(JSON.stringify({ error: 'Unknown Action Provider.' }))
+
+    // ── Delete Guest ─────────────────────────────────────────────────────
+    else if (action === 'deleteGuest') {
+      if (!data.id) throw new Error('No guest ID provided');
+      var rowIndex = data.id + 1;
+      sheet.deleteRow(rowIndex);
+
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: 'Unknown action.' }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ error: err.toString() }))
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Keep a doGet just in case you ever want to preview the raw array output 
-// directly in the browser by visiting the Web App URL.
+// doGet: preview raw guest list in browser
 function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheets()[0];
   var rows = sheet.getDataRange().getValues();
-  if (rows.length === 0) return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+  if (rows.length === 0) {
+    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+  }
 
-  var headers = rows.shift(); // Remove headers
+  rows.shift();
   var data = rows.map(function(row, index) {
     return {
       id: index + 1,
@@ -109,10 +138,12 @@ function doGet(e) {
       phone: row[2],
       attending: row[3] === 'Yes',
       foods: row[4] ? row[4].split(', ') : [],
-      status: row[5] || 'PENDING'
+      status: row[5] || 'PENDING',
+      rsvpType: row[6] || 'individual'
     };
   });
-  
-  return ContentService.createTextOutput(JSON.stringify(data))
+
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
 }
