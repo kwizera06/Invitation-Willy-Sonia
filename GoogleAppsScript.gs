@@ -39,6 +39,8 @@ function doPost(e) {
       }
 
       var timestamp = new Date();
+      var side = data.side || 'unknown'; // ← Get side from top-level payload
+
       guests.forEach(function(g) {
         // Explicitly coerce attending to boolean then to string
         var attendingBool = (g.attending === true || g.attending === 'true' || g.attending === 'Yes');
@@ -49,7 +51,8 @@ function doPost(e) {
           attendingBool ? 'Yes' : 'No',
           g.foods ? (Array.isArray(g.foods) ? g.foods.join(', ') : g.foods) : '',
           'PENDING',
-          rsvpType   // ← Column 7: individual | couple | family
+          rsvpType,   // Column 7: rsvpType
+          side       // Column 8: side (willy | sonia)
         ];
         sheet.appendRow(row);
       });
@@ -78,7 +81,8 @@ function doPost(e) {
           attending: row[3] === 'Yes',
           foods: row[4] ? row[4].split(', ') : [],
           status: row[5] || 'PENDING',
-          rsvpType: row[6] || 'individual'  // ← Return rsvpType; default for old records
+          rsvpType: row[6] || 'individual',
+          side: row[7] || 'unknown' // Column 8
         };
       });
 
@@ -139,7 +143,8 @@ function doGet(e) {
       attending: row[3] === 'Yes',
       foods: row[4] ? row[4].split(', ') : [],
       status: row[5] || 'PENDING',
-      rsvpType: row[6] || 'individual'
+      rsvpType: row[6] || 'individual',
+      side: row[7] || 'unknown'
     };
   });
 

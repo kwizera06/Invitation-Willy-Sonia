@@ -31,7 +31,7 @@ const resources = {
       "full_name": "Full Name *",
       "name_placeholder": "e.g. Sonia Rukundo",
       "phone_number": "Phone Number *",
-      "phone_placeholder": "e.g. +1 (438) 308-8742",
+      "phone_placeholder": "e.g. +1 (613) 410-4707",
       "attendance": "Attendance *",
       "will_attend": "✅ Will Attend",
       "will_not_attend": "❌ Will Not Attend",
@@ -42,6 +42,12 @@ const resources = {
       "included_for_all": "Included for all",
       "duck_confit": "Duck Confit",
       "short_rib": "Slow Roasted Short Rib",
+      "duck_confit_desc_hardcoded": "Served on mashed potatoes with a balsamic and blueberry demi-glace",
+      "short_rib_desc_hardcoded": "With mashed potato, rich peppercorn sauce topped with beurre d'échalote",
+      "vegetarian": "Vegetarian Ravioli",
+      "vegan": "Vegan Poke Bowl",
+      "vegetarian_desc": "Butternut squash ravioli with ginger ravioli and curry in a savoury sage sauce",
+      "vegan_desc": "Seasoned rice, sesame crusted tofu, edamame, avocado and kimchi with vegan aioli",
       "submitting": "Submitting…",
       "submit_rsvp": "Submit RSVP",
       "back_to_invitation": "Back to Invitation",
@@ -74,7 +80,11 @@ const resources = {
       "member": "Member",
       "error_member_name": "Please enter names for all members.",
       "confirm_remove": "Are you sure you want to remove this member?",
-      "confirm_reject": "Are you sure you want to permanently remove this guest from the list?"
+      "confirm_reject": "Are you sure you want to permanently remove this guest from the list?",
+      "whose_guest": "Whose guest are you?",
+      "willy_side": "Willy's Side",
+      "sonia_side": "Sonia's Side",
+      "error_side": "Please select whose guest you are."
     }
   },
   fr: {
@@ -105,7 +115,7 @@ const resources = {
       "full_name": "Nom complet *",
       "name_placeholder": "ex: Sonia Rukundo",
       "phone_number": "Numéro de téléphone *",
-      "phone_placeholder": "ex: +1 (438) 308-8742",
+      "phone_placeholder": "ex: +1 (613) 410-4707",
       "attendance": "Présence *",
       "will_attend": "✅ Sera présent(e)",
       "will_not_attend": "❌ Ne sera pas présent(e)",
@@ -116,6 +126,12 @@ const resources = {
       "included_for_all": "Inclus pour tous",
       "duck_confit": "Confit de canard",
       "short_rib": "Côte courte braisée lentement",
+      "duck_confit_desc_hardcoded": "Servi sur purée de pommes de terre avec une sauce demi-glace au balsamique et aux bleuets",
+      "short_rib_desc_hardcoded": "Avec purée de pommes de terre, sauce au poivre onctueuse surmontée d'un beurre d'échalote",
+      "vegetarian": "Raviolis végétariens",
+      "vegan": "Poke bowl végétalien",
+      "vegetarian_desc": "Raviolis à la courge musquée avec raviolis au gingembre et curry dans une sauce savoureuse à la sauge",
+      "vegan_desc": "Riz assaisonné, tofu en croûte de sésame, edamamé, avocat et kimchi avec aïoli végétalien",
       "submitting": "Envoi en cours…",
       "submit_rsvp": "Soumettre",
       "back_to_invitation": "Retour à l'invitation",
@@ -148,7 +164,11 @@ const resources = {
       "member": "Membre",
       "error_member_name": "Veuillez entrer les noms de tous les membres.",
       "confirm_remove": "Êtes-vous sûr de vouloir supprimer ce membre ?",
-      "confirm_reject": "Êtes-vous sûr de vouloir supprimer définitivement cet invité de la liste ?"
+      "confirm_reject": "Êtes-vous sûr de vouloir supprimer définitivement cet invité de la liste ?",
+      "whose_guest": "De quel côté êtes-vous ?",
+      "willy_side": "Côté Willy",
+      "sonia_side": "Côté Sonia",
+      "error_side": "Veuillez choisir de quel côté vous êtes."
     }
   },
   rw: {
@@ -179,7 +199,7 @@ const resources = {
       "full_name": "Amazina yose *",
       "name_placeholder": "urugero: Sonia Rukundo",
       "phone_number": "Numero ya terefone *",
-      "phone_placeholder": "urugero: +1 (438) 308-8742",
+      "phone_placeholder": "urugero: +1 (613) 410-4707",
       "attendance": "Kwitabira *",
       "will_attend": "✅ Nzaza",
       "will_not_attend": "❌ Ntabwo nzaboneka",
@@ -190,6 +210,12 @@ const resources = {
       "included_for_all": "Niryo kuri bose",
       "duck_confit": "Ibishwi bishyushye",
       "short_rib": "Inyama y'inkoko imeze neza",
+      "duck_confit_desc_hardcoded": "Yatunganijwe neza n'ibirayi biseye",
+      "short_rib_desc_hardcoded": "Yatunganijwe neza n'ibirayi biseye n'isosi y'inyama",
+      "vegetarian": "Ravioli y'imboga",
+      "vegan": "Poke bowl y'imboga",
+      "vegetarian_desc": "Ravioli y'ibihaza n'intangazuru mu isosi y'icyayi",
+      "vegan_desc": "Umuceri uvanze n'imboga, tofu, edamame, avoka na kimchi",
       "submitting": "Birimo kwandikwa…",
       "submit_rsvp": "Emeza Ko Uzaboneka",
       "back_to_invitation": "Subira inyuma",
@@ -222,7 +248,11 @@ const resources = {
       "member": "Umuntu",
       "error_member_name": "Andika amazina y'abantu bose.",
       "confirm_remove": "Ese wizeye neza ko ushaka gukura uyu muntu kuri uru rutonde?",
-      "confirm_reject": "Ese wizeye neza ko ushaka gukura uyu muntu mu bazaza burundu?"
+      "confirm_reject": "Ese wizeye neza ko ushaka gukura uyu muntu mu bazaza burundu?",
+      "whose_guest": "Uri umutumirwa wa nde?",
+      "willy_side": "Kuruhande rwa Willy",
+      "sonia_side": "Kuruhande rwa Sonia",
+      "error_side": "Hitamo uwo muntu uje mu ruhande rwe."
     }
   }
 };

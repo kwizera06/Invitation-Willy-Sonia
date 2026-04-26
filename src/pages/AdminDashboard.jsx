@@ -7,6 +7,8 @@ import './AdminDashboard.css';
 const FOOD_ICONS = {
     duck_confit: '🦆',
     short_rib:   '🥩',
+    vegetarian:  '🥗',
+    vegan:       '🥣',
     // legacy fallbacks for old data
     rice: '🍚', chicken: '🍗', beef: '🥩', fish: '🐟', vegetables: '🥗', fruits: '🍉',
 };
@@ -14,6 +16,8 @@ const FOOD_ICONS = {
 const FOOD_LABELS = {
     duck_confit: 'Duck Confit',
     short_rib:   'Short Rib',
+    vegetarian:  'Vegetarian Ravioli',
+    vegan:       'Vegan Poke Bowl',
 };
 
 const TYPE_META = {
@@ -45,6 +49,7 @@ export default function AdminDashboard() {
     const [filterStatus, setFilterStatus] = useState('all');
     const [filterType, setFilterType] = useState('all');
     const [filterFood, setFilterFood] = useState('all');   // all | duck_confit | short_rib
+    const [filterSide, setFilterSide] = useState('all');   // all | willy | sonia
     const [actionLoad, setActionLoad] = useState(null);
 
     useEffect(() => {
@@ -127,7 +132,8 @@ export default function AdminDashboard() {
             || (filterAtt === 'no' && !g.attending);
         const matchStatus = filterStatus === 'all' || g.status === filterStatus;
         const matchFood  = filterFood === 'all' || (g.foods && g.foods.includes(filterFood));
-        return matchSearch && matchAtt && matchStatus && matchFood;
+        const matchSide  = filterSide === 'all' || g.side === filterSide;
+        return matchSearch && matchAtt && matchStatus && matchFood && matchSide;
     });
 
     // All-time totals (not affected by filters) for the stat cards
@@ -139,6 +145,10 @@ export default function AdminDashboard() {
         pending:    validGuests.filter(g => g.status === 'PENDING').length,
         duckConfit: attendingGuests.filter(g => g.foods?.includes('duck_confit')).length,
         shortRib:   attendingGuests.filter(g => g.foods?.includes('short_rib')).length,
+        vegetarian: attendingGuests.filter(g => g.foods?.includes('vegetarian')).length,
+        vegan:      attendingGuests.filter(g => g.foods?.includes('vegan')).length,
+        willy:      validGuests.filter(g => g.side === 'willy').length,
+        sonia:      validGuests.filter(g => g.side === 'sonia').length,
     };
 
     /** Group by timestamp; each group is one RSVP submission */
@@ -215,12 +225,49 @@ export default function AdminDashboard() {
                                 <span className="menu-stat-name">Short Rib</span>
                             </div>
                         </div>
+                        <div className="menu-stat-card">
+                            <span className="menu-stat-emoji">🥗</span>
+                            <div>
+                                <span className="menu-stat-count">{stats.vegetarian}</span>
+                                <span className="menu-stat-name">Vegetarian</span>
+                            </div>
+                        </div>
+                        <div className="menu-stat-divider" />
+                        <div className="menu-stat-card">
+                            <span className="menu-stat-emoji">🥣</span>
+                            <div>
+                                <span className="menu-stat-count">{stats.vegan}</span>
+                                <span className="menu-stat-name">Vegan</span>
+                            </div>
+                        </div>
                         <div className="menu-stat-divider" />
                         <div className="menu-stat-card menu-stat-total">
                             <span className="menu-stat-emoji">👥</span>
                             <div>
-                                <span className="menu-stat-count">{stats.duckConfit + stats.shortRib}</span>
+                                <span className="menu-stat-count">{stats.duckConfit + stats.shortRib + stats.vegetarian + stats.vegan}</span>
                                 <span className="menu-stat-name">Total Orders</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Side Breakdown ── */}
+                <div className="menu-stats-row fade-in-up" style={{ borderLeftColor: 'var(--green)' }}>
+                    <span className="menu-stats-title">👥 Guests by Side</span>
+                    <div className="menu-stat-cards">
+                        <div className="menu-stat-card">
+                            <span className="menu-stat-emoji">🤵</span>
+                            <div>
+                                <span className="menu-stat-count">{stats.willy}</span>
+                                <span className="menu-stat-name">Willy's Guests</span>
+                            </div>
+                        </div>
+                        <div className="menu-stat-divider" />
+                        <div className="menu-stat-card">
+                            <span className="menu-stat-emoji">👰</span>
+                            <div>
+                                <span className="menu-stat-count">{stats.sonia}</span>
+                                <span className="menu-stat-name">Sonia's Guests</span>
                             </div>
                         </div>
                     </div>
@@ -245,6 +292,13 @@ export default function AdminDashboard() {
                         <option value="all">All Main Courses</option>
                         <option value="duck_confit">🦆 Duck Confit ({stats.duckConfit})</option>
                         <option value="short_rib">🥩 Short Rib ({stats.shortRib})</option>
+                        <option value="vegetarian">🥗 Vegetarian ({stats.vegetarian})</option>
+                        <option value="vegan">🥣 Vegan ({stats.vegan})</option>
+                    </select>
+                    <select value={filterSide} onChange={e => setFilterSide(e.target.value)} className="filter-select">
+                        <option value="all">All Sides</option>
+                        <option value="willy">🤵 Willy ({stats.willy})</option>
+                        <option value="sonia">👰 Sonia ({stats.sonia})</option>
                     </select>
                     <select value={filterAtt} onChange={e => setFilterAtt(e.target.value)} className="filter-select">
                         <option value="all">All Attendance</option>
@@ -288,6 +342,10 @@ export default function AdminDashboard() {
                                         <div className="group-header-left">
                                             <span className={`group-type-badge badge-type-${type}`}>
                                                 {typeMeta.emoji} {typeMeta.label}
+                                            </span>
+                                            <span className={`group-side-badge badge-side-${groupMembers[0]?.side}`}>
+                                                {groupMembers[0]?.side === 'willy' ? '🤵 Willy' : 
+                                                 groupMembers[0]?.side === 'sonia' ? '👰 Sonia' : '❓ Unknown'}
                                             </span>
                                             <span className="group-time">
                                                 📅 {new Date(parseInt(timestamp)).toLocaleString()}

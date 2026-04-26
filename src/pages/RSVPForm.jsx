@@ -5,18 +5,10 @@ import { submitRsvp } from '../api';
 import './RSVPForm.css';
 
 const MAIN_COURSES = [
-    {
-        id: 'duck_confit',
-        emoji: '🦆',
-        name: 'Duck Confit',
-        description: 'Served on mashed potatoes with a balsamic and blueberry demi-glace',
-    },
-    {
-        id: 'short_rib',
-        emoji: '🥩',
-        name: 'Slow Roasted Short Rib',
-        description: 'With mashed potato, rich peppercorn sauce topped with beurre d\'échalote',
-    },
+    { id: 'duck_confit', emoji: '🦆', nameKey: 'duck_confit', descKey: 'duck_confit_desc_hardcoded' },
+    { id: 'short_rib', emoji: '🥩', nameKey: 'short_rib', descKey: 'short_rib_desc_hardcoded' },
+    { id: 'vegetarian', emoji: '🥗', nameKey: 'vegetarian', descKey: 'vegetarian_desc' },
+    { id: 'vegan', emoji: '🥣', nameKey: 'vegan', descKey: 'vegan_desc' },
 ];
 
 const RSVP_TYPES = [
@@ -32,6 +24,7 @@ export default function RSVPForm() {
     const [rsvpType, setRsvpType] = useState('individual');
     const [phone, setPhone] = useState('');
     const [members, setMembers] = useState([{ name: '', attending: null, mainCourse: null }]);
+    const [side, setSide] = useState(null); // 'willy' or 'sonia'
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -84,6 +77,7 @@ export default function RSVPForm() {
         e.preventDefault();
         setError('');
 
+        if (!side) return setError(t('error_side'));
         if (!phone.trim()) return setError(t('error_phone'));
 
         for (let i = 0; i < members.length; i++) {
@@ -99,6 +93,7 @@ export default function RSVPForm() {
             await submitRsvp({
                 phone: phone.trim(),
                 rsvpType,
+                side,
                 guests: members.map(m => ({
                     name: m.name.trim(),
                     attending: m.attending === true,
@@ -127,22 +122,46 @@ export default function RSVPForm() {
                 </div>
 
                 <form className="card rsvp-card fade-in-up" onSubmit={handleSubmit}>
-                    {/* RSVP Type */}
+                    {/* ── Side Selection ── */}
                     <div className="form-group">
-                        <label>{t('rsvp_type')}</label>
-                        <div className="type-options">
-                            {RSVP_TYPES.map(type => (
-                                <div
-                                    key={type.id}
-                                    className={`type-card ${rsvpType === type.id ? 'active' : ''}`}
-                                    onClick={() => setRsvpType(type.id)}
-                                >
-                                    <span className="type-emoji">{type.emoji}</span>
-                                    <span className="type-label">{t(type.labelKey)}</span>
-                                </div>
-                            ))}
+                        <label>{t('whose_guest')}</label>
+                        <div className="side-options">
+                            <div 
+                                className={`side-card ${side === 'willy' ? 'active' : ''}`}
+                                onClick={() => setSide('willy')}
+                            >
+                                <span className="side-emoji">🤵</span>
+                                <span className="side-label">{t('willy_side')}</span>
+                            </div>
+                            <div 
+                                className={`side-card ${side === 'sonia' ? 'active' : ''}`}
+                                onClick={() => setSide('sonia')}
+                            >
+                                <span className="side-emoji">👰</span>
+                                <span className="side-label">{t('sonia_side')}</span>
+                            </div>
                         </div>
                     </div>
+
+                    <div className="divider-soft"></div>
+
+                    <div className={side ? 'fade-in' : 'form-disabled'}>
+                        {/* RSVP Type */}
+                        <div className="form-group">
+                            <label>{t('rsvp_type')}</label>
+                            <div className="type-options">
+                                {RSVP_TYPES.map(type => (
+                                    <div
+                                        key={type.id}
+                                        className={`type-card ${rsvpType === type.id ? 'active' : ''}`}
+                                        onClick={() => setRsvpType(type.id)}
+                                    >
+                                        <span className="type-emoji">{type.emoji}</span>
+                                        <span className="type-label">{t(type.labelKey)}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
                     {/* Primary Phone */}
                     <div className="form-group">
@@ -243,8 +262,8 @@ export default function RSVPForm() {
                                                         <div className="main-course-content">
                                                             <span className="main-course-emoji">{course.emoji}</span>
                                                             <div>
-                                                                <p className="main-course-name">{course.name}</p>
-                                                                <p className="main-course-desc">{course.description}</p>
+                                                                <p className="main-course-name">{t(course.nameKey)}</p>
+                                                                <p className="main-course-desc">{t(course.descKey)}</p>
                                                             </div>
                                                         </div>
                                                     </label>
@@ -293,7 +312,8 @@ export default function RSVPForm() {
                             ← {t('back_to_invitation')}
                         </a>
                     </p>
-                </form>
+                </div>
+            </form>
             </div>
         </div>
     );
