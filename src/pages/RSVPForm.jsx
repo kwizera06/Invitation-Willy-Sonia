@@ -24,7 +24,7 @@ export default function RSVPForm() {
     const [rsvpType, setRsvpType] = useState('individual');
     const [phone, setPhone] = useState('');
     const [members, setMembers] = useState([{ name: '', attending: null, mainCourse: null }]);
-    const [side, setSide] = useState(null); // 'willy' or 'sonia'
+    const [side, setSide] = useState(null); // 'william' or 'sonia'
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');

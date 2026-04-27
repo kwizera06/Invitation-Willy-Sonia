@@ -91,6 +91,29 @@ export default function InvitationPage() {
                 </div>
             </section>
 
+            
+            {/* Countdown */}
+            <section className="countdown-section">
+                <div className="container">
+                    <h2 className="section-title">{t('countdown_title')}</h2>
+                    <Countdown />
+                </div>
+            </section>
+
+
+            {/* RSVP CTA */}
+            <section className="rsvp-cta-section">
+                <div className="container">
+                    <div className="rsvp-cta-card card">
+                        <h2>{t('rsvp_cta_title')}</h2>
+                        <p>{t('rsvp_cta_text')}</p>
+                        <button className="btn btn-highlight pulse-animation" onClick={() => navigate('/rsvp')}>
+                            💌 {t('confirm_attendance')}
+                        </button>
+                    </div>
+                </div>
+            </section>
+
             {/* Couple info / Contacts */}
             <section className="couple-section">
                 <div className="container">
@@ -123,27 +146,6 @@ export default function InvitationPage() {
                 </div>
             </section>
 
-            {/* Countdown */}
-            <section className="countdown-section">
-                <div className="container">
-                    <h2 className="section-title">{t('countdown_title')}</h2>
-                    <Countdown />
-                </div>
-            </section>
-
-
-            {/* RSVP CTA */}
-            <section className="rsvp-cta-section">
-                <div className="container">
-                    <div className="rsvp-cta-card card">
-                        <h2>{t('rsvp_cta_title')}</h2>
-                        <p>{t('rsvp_cta_text')}</p>
-                        <button className="btn btn-highlight pulse-animation" onClick={() => navigate('/rsvp')}>
-                            💌 {t('confirm_attendance')}
-                        </button>
-                    </div>
-                </div>
-            </section>
 
             {/* Footer */}
             <footer className="invitation-footer">
