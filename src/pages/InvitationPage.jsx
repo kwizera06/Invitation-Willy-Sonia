@@ -137,7 +137,7 @@ export default function InvitationPage() {
                             <div className="couple-icon">🤵</div>
                             <h3>William</h3>
                             <div className="phone-list">
-                                <a href="tel:+16134104707" className="couple-phone">📞 +1 (613) 410-4707</a>
+                                <a href="tel:+14382266238" className="couple-phone">📞 +1 (438) 226-6238</a>
                                 <a href="tel:+250788587452" className="couple-phone">📞 +250 788 587 452</a>
                                 <a href="tel:+250788805318" className="couple-phone">📞 +250 788 805 318</a>
                             </div>
