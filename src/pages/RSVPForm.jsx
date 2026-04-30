@@ -11,17 +11,12 @@ const MAIN_COURSES = [
     { id: 'vegan', emoji: '🥣', nameKey: 'vegan', descKey: 'vegan_desc' },
 ];
 
-const RSVP_TYPES = [
-    { id: 'individual', labelKey: 'individual', emoji: '👤' },
-    { id: 'couple', labelKey: 'couple', emoji: '💑' },
-    { id: 'family', labelKey: 'family', emoji: '👨‍👩‍👧‍👦' },
-];
+
 
 export default function RSVPForm() {
     const navigate = useNavigate();
     const { t } = useTranslation();
     
-    const [rsvpType, setRsvpType] = useState('individual');
     const [phone, setPhone] = useState('');
     const [members, setMembers] = useState([{ name: '', attending: null, mainCourse: null }]);
     const [side, setSide] = useState(null); // 'william' or 'sonia'
@@ -29,22 +24,7 @@ export default function RSVPForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    // Sync member count with RSVP type
-    useEffect(() => {
-        if (rsvpType === 'individual') {
-            setMembers(prev => prev.slice(0, 1));
-        } else if (rsvpType === 'couple') {
-            if (members.length < 2) {
-                setMembers(prev => [...prev, ...Array(2 - prev.length).fill(0).map(() => ({ name: '', attending: null, mainCourse: null }))]);
-            } else if (members.length > 2) {
-                setMembers(prev => prev.slice(0, 2));
-            }
-        } else if (rsvpType === 'family') {
-            if (members.length < 2) {
-                setMembers(prev => [...prev, ...Array(2 - prev.length).fill(0).map(() => ({ name: '', attending: null, mainCourse: null }))]);
-            }
-        }
-    }, [rsvpType]);
+
 
     const updateMember = (index, field, value) => {
         setMembers(prev => {
@@ -92,7 +72,6 @@ export default function RSVPForm() {
         try {
             await submitRsvp({
                 phone: phone.trim(),
-                rsvpType,
                 side,
                 guests: members.map(m => ({
                     name: m.name.trim(),
@@ -165,22 +144,7 @@ export default function RSVPForm() {
                             
                             <div className="divider-soft" style={{ margin: '16px 0 24px 0' }}></div>
 
-                            {/* RSVP Type */}
-                            <div className="form-group">
-                            <label>{t('rsvp_type')}</label>
-                            <div className="type-options">
-                                {RSVP_TYPES.map(type => (
-                                    <div
-                                        key={type.id}
-                                        className={`type-card ${rsvpType === type.id ? 'active' : ''}`}
-                                        onClick={() => setRsvpType(type.id)}
-                                    >
-                                        <span className="type-emoji">{type.emoji}</span>
-                                        <span className="type-label">{t(type.labelKey)}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+
 
                     {/* Primary Phone */}
                     <div className="form-group">
@@ -204,7 +168,7 @@ export default function RSVPForm() {
                                 <div key={idx} className="member-card fade-in">
                                     <div className="member-card-header">
                                         <h3>{t('member')} #{idx + 1}</h3>
-                                        {rsvpType === 'family' && members.length > 1 && (
+                                        {members.length > 1 && (
                                             <button
                                                 type="button"
                                                 className="remove-member-btn"
@@ -303,11 +267,9 @@ export default function RSVPForm() {
                             ))}
                         </div>
 
-                        {rsvpType === 'family' && (
-                            <button type="button" className="add-member-btn" onClick={addMember}>
-                                ➕ {t('add_member')}
-                            </button>
-                        )}
+                        <button type="button" className="add-member-btn" onClick={addMember}>
+                            ➕ {t('add_member')}
+                        </button>
                     </div>
 
                     {/* Error */}

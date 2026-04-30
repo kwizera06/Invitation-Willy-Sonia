@@ -282,12 +282,12 @@ export default function AdminDashboard() {
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
-                    <select value={filterType} onChange={e => setFilterType(e.target.value)} className="filter-select">
+                    {/* <select value={filterType} onChange={e => setFilterType(e.target.value)} className="filter-select">
                         <option value="all">All Types</option>
                         <option value="individual">👤 Individual</option>
                         <option value="couple">💑 Couple</option>
                         <option value="family">👨‍👩‍👧‍👦 Family</option>
-                    </select>
+                    </select> */}
                     <select value={filterFood} onChange={e => setFilterFood(e.target.value)} className="filter-select">
                         <option value="all">All Main Courses</option>
                         <option value="duck_confit">🦆 Duck Confit ({stats.duckConfit})</option>
@@ -300,16 +300,16 @@ export default function AdminDashboard() {
                         <option value="willy">🤵 Willy ({stats.willy})</option>
                         <option value="sonia">👰 Sonia ({stats.sonia})</option>
                     </select>
-                    <select value={filterAtt} onChange={e => setFilterAtt(e.target.value)} className="filter-select">
+                    {/* <select value={filterAtt} onChange={e => setFilterAtt(e.target.value)} className="filter-select">
                         <option value="all">All Attendance</option>
                         <option value="yes">✅ Attending</option>
                         <option value="no">❌ Not Attending</option>
-                    </select>
+                    </select> */}
                     <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="filter-select">
                         <option value="all">All Statuses</option>
                         <option value="PENDING">⏳ Pending</option>
                         <option value="ACCEPTED">✅ Accepted</option>
-                        <option value="REJECTED">❌ Rejected</option>
+                        {/* <option value="REJECTED">❌ Rejected</option> */}
                     </select>
                     <button className="btn btn-outline btn-sm" onClick={fetchGuests}>
                         ↻ Refresh

@@ -76,7 +76,7 @@ export default function InvitationPage() {
                     <h2 className="section-title">{t('order_events')}</h2>
                     <div className="schedule-grid">
                         <div className="schedule-item">
-                            <span className="time">1:00 PM</span>
+                            <span className="time">12:00 PM</span>
                             <span className="event">{t('event_intro')}</span>
                         </div>
                         <div className="schedule-item">
