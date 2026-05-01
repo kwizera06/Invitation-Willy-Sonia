@@ -5,7 +5,7 @@ import { submitRsvp } from '../api';
 import './RSVPForm.css';
 
 const MAIN_COURSES = [
-    { id: 'duck_confit', emoji: '🦆', nameKey: 'duck_confit', descKey: 'duck_confit_desc_hardcoded' },
+    { id: 'duck_confit', emoji: '🍗', nameKey: 'duck_confit', descKey: 'duck_confit_desc_hardcoded' },
     { id: 'short_rib', emoji: '🥩', nameKey: 'short_rib', descKey: 'short_rib_desc_hardcoded' },
     { id: 'vegetarian', emoji: '🥗', nameKey: 'vegetarian', descKey: 'vegetarian_desc' },
     { id: 'vegan', emoji: '🥣', nameKey: 'vegan', descKey: 'vegan_desc' },
