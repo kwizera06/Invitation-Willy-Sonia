@@ -5,19 +5,21 @@ import { useTranslation } from 'react-i18next';
 import './AdminDashboard.css';
 
 const FOOD_ICONS = {
-    duck_confit: '🦆',
-    short_rib:   '🥩',
-    vegetarian:  '🥗',
-    vegan:       '🥣',
+    chicken_supreme: '🍗',
+    duck_confit:     '🍗', // fallback
+    short_rib:       '🥩',
+    vegetarian:      '🥗',
+    vegan:           '🥣',
     // legacy fallbacks for old data
     rice: '🍚', chicken: '🍗', beef: '🥩', fish: '🐟', vegetables: '🥗', fruits: '🍉',
 };
 
 const FOOD_LABELS = {
-    duck_confit: 'Duck Confit',
-    short_rib:   'Short Rib',
-    vegetarian:  'Vegetarian Ravioli',
-    vegan:       'Vegan Poke Bowl',
+    chicken_supreme: 'Chicken Supreme',
+    duck_confit:     'Chicken Supreme', // fallback
+    short_rib:       'Short Rib',
+    vegetarian:      'Vegetarian Ravioli',
+    vegan:           'Vegan Poke Bowl',
 };
 
 const TYPE_META = {
@@ -48,7 +50,7 @@ export default function AdminDashboard() {
     const [filterAtt, setFilterAtt] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
     const [filterType, setFilterType] = useState('all');
-    const [filterFood, setFilterFood] = useState('all');   // all | duck_confit | short_rib
+    const [filterFood, setFilterFood] = useState('all');   // all | chicken_supreme | short_rib
     const [filterSide, setFilterSide] = useState('all');   // all | willy | sonia
     const [actionLoad, setActionLoad] = useState(null);
 
@@ -143,7 +145,7 @@ export default function AdminDashboard() {
         attending:  attendingGuests.length,
         accepted:   validGuests.filter(g => g.status === 'ACCEPTED').length,
         pending:    validGuests.filter(g => g.status === 'PENDING').length,
-        duckConfit: attendingGuests.filter(g => g.foods?.includes('duck_confit')).length,
+        chickenSupreme: attendingGuests.filter(g => g.foods?.includes('chicken_supreme') || g.foods?.includes('duck_confit')).length,
         shortRib:   attendingGuests.filter(g => g.foods?.includes('short_rib')).length,
         vegetarian: attendingGuests.filter(g => g.foods?.includes('vegetarian')).length,
         vegan:      attendingGuests.filter(g => g.foods?.includes('vegan')).length,
@@ -211,10 +213,10 @@ export default function AdminDashboard() {
                     <span className="menu-stats-title">🍽️ Main Course Orders</span>
                     <div className="menu-stat-cards">
                         <div className="menu-stat-card">
-                            <span className="menu-stat-emoji">🦆</span>
+                            <span className="menu-stat-emoji">🍗</span>
                             <div>
-                                <span className="menu-stat-count">{stats.duckConfit}</span>
-                                <span className="menu-stat-name">Duck Confit</span>
+                                <span className="menu-stat-count">{stats.chickenSupreme}</span>
+                                <span className="menu-stat-name">Chicken Supreme</span>
                             </div>
                         </div>
                         <div className="menu-stat-divider" />
@@ -244,7 +246,7 @@ export default function AdminDashboard() {
                         <div className="menu-stat-card menu-stat-total">
                             <span className="menu-stat-emoji">👥</span>
                             <div>
-                                <span className="menu-stat-count">{stats.duckConfit + stats.shortRib + stats.vegetarian + stats.vegan}</span>
+                                <span className="menu-stat-count">{stats.chickenSupreme + stats.shortRib + stats.vegetarian + stats.vegan}</span>
                                 <span className="menu-stat-name">Total Orders</span>
                             </div>
                         </div>
@@ -290,7 +292,7 @@ export default function AdminDashboard() {
                     </select> */}
                     <select value={filterFood} onChange={e => setFilterFood(e.target.value)} className="filter-select">
                         <option value="all">All Main Courses</option>
-                        <option value="duck_confit">🦆 Duck Confit ({stats.duckConfit})</option>
+                        <option value="chicken_supreme">🍗 Chicken Supreme ({stats.chickenSupreme})</option>
                         <option value="short_rib">🥩 Short Rib ({stats.shortRib})</option>
                         <option value="vegetarian">🥗 Vegetarian ({stats.vegetarian})</option>
                         <option value="vegan">🥣 Vegan ({stats.vegan})</option>
