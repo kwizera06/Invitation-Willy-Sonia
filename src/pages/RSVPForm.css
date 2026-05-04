@@ -166,46 +166,7 @@
     background: rgba(229, 115, 115, 0.1);
 }
 
-/* --- Attendance Buttons --- */
-.attendance-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.attendance-btn {
-    padding: 18px 12px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-sm);
-    background: transparent;
-    font-family: 'Lato', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-body);
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.attendance-btn:hover {
-    border-color: var(--gold);
-    background: var(--white);
-}
-
-.attendance-btn.active-yes {
-    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-    border-color: var(--green);
-    color: var(--green-dark);
-}
-
-.attendance-btn.active-no {
-    background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
-    border-color: #e57373;
-    color: #c62828;
-}
+/* --- Attendance Buttons (Removed) --- */
 
 /* --- Menu Section --- */
 .menu-included {

@@ -47,7 +47,6 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
-    const [filterAtt, setFilterAtt] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
     const [filterType, setFilterType] = useState('all');
     const [filterFood, setFilterFood] = useState('all');   // all | chicken_supreme | short_rib
@@ -129,13 +128,10 @@ export default function AdminDashboard() {
     const filtered = validGuests.filter(g => {
         const q = search.toLowerCase();
         const matchSearch = !q || g.name?.toLowerCase().includes(q) || g.phone?.includes(q);
-        const matchAtt = filterAtt === 'all'
-            || (filterAtt === 'yes' && g.attending)
-            || (filterAtt === 'no' && !g.attending);
         const matchStatus = filterStatus === 'all' || g.status === filterStatus;
         const matchFood  = filterFood === 'all' || (g.foods && g.foods.includes(filterFood));
         const matchSide  = filterSide === 'all' || g.side === filterSide;
-        return matchSearch && matchAtt && matchStatus && matchFood && matchSide;
+        return matchSearch && matchStatus && matchFood && matchSide;
     });
 
     // All-time totals (not affected by filters) for the stat cards
@@ -302,11 +298,6 @@ export default function AdminDashboard() {
                         <option value="willy">🤵 Willy ({stats.willy})</option>
                         <option value="sonia">👰 Sonia ({stats.sonia})</option>
                     </select>
-                    {/* <select value={filterAtt} onChange={e => setFilterAtt(e.target.value)} className="filter-select">
-                        <option value="all">All Attendance</option>
-                        <option value="yes">✅ Attending</option>
-                        <option value="no">❌ Not Attending</option>
-                    </select> */}
                     <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="filter-select">
                         <option value="all">All Statuses</option>
                         <option value="PENDING">⏳ Pending</option>
@@ -393,7 +384,6 @@ export default function AdminDashboard() {
                                                     <th>#</th>
                                                     <th>Name</th>
                                                     <th>Phone</th>
-                                                    <th>Attendance</th>
                                                     <th>Food Choice</th>
                                                     <th>Status</th>
                                                     <th className="text-right">Actions</th>
@@ -409,12 +399,6 @@ export default function AdminDashboard() {
                                                                 : <span className="unknown-guest">Unknown Guest</span>}
                                                         </td>
                                                         <td className="td-phone">{guest.phone || '—'}</td>
-                                                        <td className="td-att">
-                                                            {guest.attending
-                                                                ? <span className="att-yes">✅ Yes</span>
-                                                                : <span className="att-no">❌ No</span>
-                                                            }
-                                                        </td>
                                                         <td className="td-foods">
                                                             {guest.foods && guest.foods.length > 0 ? (
                                                                 <div className="food-tags">

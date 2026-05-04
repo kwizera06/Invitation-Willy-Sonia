@@ -18,7 +18,7 @@ export default function RSVPForm() {
     const { t } = useTranslation();
     
     const [phone, setPhone] = useState('');
-    const [members, setMembers] = useState([{ name: '', attending: null, mainCourse: null }]);
+    const [members, setMembers] = useState([{ name: '', attending: true, mainCourse: null }]);
     const [side, setSide] = useState(null); // 'william' or 'sonia'
     
     const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ export default function RSVPForm() {
     };
 
     const addMember = () => {
-        setMembers(prev => [...prev, { name: '', attending: null, mainCourse: null }]);
+        setMembers(prev => [...prev, { name: '', attending: true, mainCourse: null }]);
     };
 
     const removeMember = (index) => {
@@ -62,7 +62,7 @@ export default function RSVPForm() {
 
         for (let i = 0; i < members.length; i++) {
             if (!members[i].name.trim()) return setError(`${t('error_member_name')} (${t('member')} #${i + 1})`);
-            if (members[i].attending === null) return setError(`${t('error_attendance')} (${members[i].name})`);
+
             if (members[i].attending && !members[i].mainCourse) {
                 return setError(`${t('error_main_course')} (${members[i].name || `${t('member')} #${i + 1}`})`);
             }
@@ -188,27 +188,7 @@ export default function RSVPForm() {
                                         />
                                     </div>
 
-                                    <div className="form-group">
-                                        <div className="attendance-options">
-                                            <button
-                                                type="button"
-                                                className={`attendance-btn ${member.attending === true ? 'active-yes' : ''}`}
-                                                onClick={() => updateMember(idx, 'attending', true)}
-                                            >
-                                                {t('will_attend')}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={`attendance-btn ${member.attending === false ? 'active-no' : ''}`}
-                                                onClick={() => {
-                                                    updateMember(idx, 'attending', false);
-                                                    updateMember(idx, 'foods', []);
-                                                }}
-                                            >
-                                                {t('will_not_attend')}
-                                            </button>
-                                        </div>
-                                    </div>
+                                    {/* Attendance is implicitly 'Yes' now */}
 
                                     {/* Main Course — only shown if attending */}
                                     {member.attending === true && (
