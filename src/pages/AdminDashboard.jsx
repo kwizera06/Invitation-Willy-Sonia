@@ -86,9 +86,14 @@ export default function AdminDashboard() {
 
     const copyToClipboard = async (code) => {
         const url = `${window.location.origin}/?code=${code}`;
+        const confirmed = window.confirm(
+            `Copy this invitation link?\n\n${url}\n\n⚠️ Once copied, a fresh link will be generated automatically.\nThis link will be assigned to the next guest you invite.`
+        );
+        if (!confirmed) return;
+
         try {
             await navigator.clipboard.writeText(url);
-            alert('Selection copied! A new fresh link is being prepared for the next guest.');
+            alert('✅ Link copied! A new fresh link is now ready for the next guest.');
             
             // Quietly generate a new link for the next usage
             setGenLoading(true);
