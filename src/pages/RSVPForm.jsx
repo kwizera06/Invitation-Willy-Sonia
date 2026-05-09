@@ -1,30 +1,55 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { submitRsvp } from '../api';
+import { submitRsvp, verifyInviteCode } from '../api';
 import './RSVPForm.css';
 
 const MAIN_COURSES = [
-    { id: 'chicken_supreme', emoji: '🍗', nameKey: 'chicken_supreme', descKey: 'chicken_supreme_desc_hardcoded' },
-    { id: 'short_rib', emoji: '🥩', nameKey: 'short_rib', descKey: 'short_rib_desc_hardcoded' },
-    { id: 'vegetarian', emoji: '🥗', nameKey: 'vegetarian', descKey: 'vegetarian_desc' },
-    { id: 'vegan', emoji: '🥣', nameKey: 'vegan', descKey: 'vegan_desc' },
+    { id: 'chicken_supreme', nameKey: 'menu_chicken', descKey: 'menu_chicken_desc', emoji: '🍗' },
+    { id: 'short_rib',      nameKey: 'menu_short_rib', descKey: 'menu_short_rib_desc', emoji: '🥩' },
+    { id: 'vegetarian',     nameKey: 'menu_vegetarian', descKey: 'menu_vegetarian_desc', emoji: '🥗' },
+    { id: 'vegan',          nameKey: 'menu_vegan',      descKey: 'menu_vegan_desc', emoji: '🥣' }
 ];
-
-
 
 export default function RSVPForm() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation();
     
+    const [inviteCode, setInviteCode] = useState('');
+    const [verifying, setVerifying] = useState(true);
     const [phone, setPhone] = useState('');
     const [members, setMembers] = useState([{ name: '', attending: true, mainCourse: null }]);
-    const [side, setSide] = useState(null); // 'william' or 'sonia'
+    const [side, setSide] = useState(null); 
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const code = params.get('code');
+        if (!code) {
+            navigate('/');
+            return;
+        }
+        setInviteCode(code);
+        checkCode(code);
+    }, [location.search]);
 
+    const checkCode = async (code) => {
+        try {
+            const res = await verifyInviteCode(code);
+            if (!res.data || !res.data.valid || res.data.status !== 'PENDING') {
+                alert(t('invalid_code_alert') || 'This invitation link is invalid or has already been used.');
+                navigate('/');
+            } else {
+                setVerifying(false);
+            }
+        } catch (err) {
+            console.error('Verify failed:', err);
+            navigate('/');
+        }
+    };
 
     const updateMember = (index, field, value) => {
         setMembers(prev => {
@@ -32,14 +57,6 @@ export default function RSVPForm() {
             next[index] = { ...next[index], [field]: value };
             return next;
         });
-    };
-
-    const toggleFood = (memberIndex, foodId) => {
-        const member = members[memberIndex];
-        const newFoods = member.foods.includes(foodId)
-            ? member.foods.filter(x => x !== foodId)
-            : [...member.foods, foodId];
-        updateMember(memberIndex, 'foods', newFoods);
     };
 
     const addMember = () => {
@@ -62,7 +79,6 @@ export default function RSVPForm() {
 
         for (let i = 0; i < members.length; i++) {
             if (!members[i].name.trim()) return setError(`${t('error_member_name')} (${t('member')} #${i + 1})`);
-
             if (members[i].attending && !members[i].mainCourse) {
                 return setError(`${t('error_main_course')} (${members[i].name || `${t('member')} #${i + 1}`})`);
             }
@@ -71,12 +87,12 @@ export default function RSVPForm() {
         setLoading(true);
         try {
             await submitRsvp({
+                inviteCode,
                 phone: phone.trim(),
                 side,
                 guests: members.map(m => ({
                     name: m.name.trim(),
                     attending: m.attending === true,
-                    // foods array: mainCourse only if attending, empty otherwise
                     foods: m.attending && m.mainCourse ? [m.mainCourse] : [],
                     phone: phone.trim()
                 }))
@@ -89,6 +105,17 @@ export default function RSVPForm() {
             setLoading(false);
         }
     };
+
+    if (verifying) {
+        return (
+            <div className="rsvp-wrapper">
+                <div className="admin-loading">
+                    <div className="spinner"></div>
+                    <span>Verifying Invitation...</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="rsvp-wrapper">

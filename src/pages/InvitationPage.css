@@ -357,6 +357,48 @@
     }
 }
 
+/* --- Locked RSVP State --- */
+.locked-rsvp-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.locked-message {
+    color: var(--gold-light) !important;
+    font-size: 1rem !important;
+    margin-bottom: 0 !important;
+    font-weight: 500;
+}
+
+.contact-numbers-small {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.contact-tag {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0.03em;
+}
+
+.btn-disabled {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
     .couple-grid {

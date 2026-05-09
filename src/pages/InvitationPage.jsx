@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { verifyInviteCode } from '../api';
 import './InvitationPage.css';
 
 const WEDDING_DATE = new Date('2026-07-26T13:00:00');
@@ -39,7 +40,42 @@ function Countdown() {
 
 export default function InvitationPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { t } = useTranslation();
+
+    const [inviteCode, setInviteCode] = useState(null);
+    const [inviteStatus, setInviteStatus] = useState('CHECKING'); // CHECKING | VALID | INVALID | USED
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const code = params.get('code');
+        if (code) {
+            setInviteCode(code);
+            checkCode(code);
+        } else {
+            setInviteStatus('INVALID');
+        }
+    }, [location.search]);
+
+    const checkCode = async (code) => {
+        try {
+            const res = await verifyInviteCode(code);
+            if (res.data && res.data.valid) {
+                setInviteStatus(res.data.status); // 'PENDING' or 'USED'
+            } else {
+                setInviteStatus('INVALID');
+            }
+        } catch (err) {
+            console.error('Code verification failed:', err);
+            setInviteStatus('INVALID');
+        }
+    };
+
+    const handleConfirmClick = () => {
+        if (inviteStatus === 'PENDING') {
+            navigate(`/rsvp?code=${inviteCode}`);
+        }
+    };
 
     return (
         <div className="invitation-wrapper">
@@ -107,9 +143,32 @@ export default function InvitationPage() {
                     <div className="rsvp-cta-card card">
                         <h2>{t('rsvp_cta_title')}</h2>
                         <p>{t('rsvp_cta_text')}</p>
-                        <button className="btn btn-highlight pulse-animation" onClick={() => navigate('/rsvp')}>
-                            💌 {t('confirm_attendance')}
-                        </button>
+                        
+                        {inviteStatus === 'PENDING' ? (
+                            <button className="btn btn-highlight pulse-animation" onClick={handleConfirmClick}>
+                                💌 {t('confirm_attendance')}
+                            </button>
+                        ) : inviteStatus === 'USED' ? (
+                            <div className="locked-rsvp-box">
+                                <p className="locked-message">✓ {t('rsvp_received') || 'RSVP already received for this invitation.'}</p>
+                                <button className="btn btn-disabled" disabled>
+                                    🔒 {t('already_confirmed') || 'Confirmed'}
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="locked-rsvp-box">
+                                <p className="locked-message">
+                                    ⚠️ {t('invite_required_message') || 'Private event. Please contact Sonia or William for your personal invitation link.'}
+                                </p>
+                                <div className="contact-numbers-small">
+                                    <span className="contact-tag">📞 Sonia: +1 (873) 376-0044</span>
+                                    <span className="contact-tag">📞 William: +1 (438) 226-6238</span>
+                                </div>
+                                <button className="btn btn-disabled" disabled>
+                                    🔒 {t('invite_only') || 'Invitation Required'}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>

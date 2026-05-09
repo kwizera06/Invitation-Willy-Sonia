@@ -30,6 +30,15 @@ api.interceptors.response.use(
 export const submitRsvp = (data) =>
   api.post('', JSON.stringify({ action: 'submitRsvp', ...data }));
 
+export const verifyInviteCode = (code) =>
+  api.post('', JSON.stringify({ action: 'verifyCode', code }));
+
+export const generateInviteCodes = (user, pass, count = 100) =>
+  api.post('', JSON.stringify({ action: 'generateCodes', user, pass, count }));
+
+export const getInviteLinks = (user, pass) =>
+  api.post('', JSON.stringify({ action: 'getAvailableCodes', user, pass }));
+
 export const getAllGuests = (user, pass) =>
   api.post('', JSON.stringify({ action: 'getAllGuests', user, pass }));
 
