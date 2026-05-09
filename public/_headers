@@ -1,0 +1,7 @@
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+
+/soniaimage1.jpeg
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000
