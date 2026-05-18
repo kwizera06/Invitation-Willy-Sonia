@@ -14,4 +14,4 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
-Sitemap: https://sonia-william-wedding.netlify.app/sitemap.xml
+Sitemap: https://soniaandwillysinvitation.netlify.app/sitemap.xml
