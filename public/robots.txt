@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://invitation-willy-sonia.vercel.app/sitemap.xml
+Sitemap: https://invitation-willy-sonia.kwizeraolivier06.workers.dev/sitemap.xml
