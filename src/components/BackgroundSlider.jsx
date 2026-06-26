@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 // Importing all 10 images
 import img1 from '../assets/back/willy1.jpeg';
@@ -28,7 +28,7 @@ const BackgroundSlider = () => {
     return (
         <div className="video-background-wrapper slider-background-wrapper">
             <AnimatePresence initial={false}>
-                <motion.div
+                <Motion.div
                     key={index}
                     initial={{ opacity: 0, x: '20%' }}
                     animate={{ opacity: 1, x: 0 }}
@@ -41,7 +41,7 @@ const BackgroundSlider = () => {
                         alt={`Background Image ${index + 1}`}
                         className="global-image"
                     />
-                </motion.div>
+                </Motion.div>
             </AnimatePresence>
             <div className="global-video-overlay" />
         </div>

@@ -15,7 +15,14 @@ export default function SuccessPage() {
                     {t('success_message')}
                 </p>
                 <p className="success-sub">
-                    <em>{t('success_sub')}</em>
+                    <em>{t('success_sub')} <a 
+                        href="https://www.google.com/maps/search/?api=1&query=Le+Belvedere+40+des+sentier+Wakefield+QC+J0X+3G0" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="address-link"
+                    >
+                        {t('venue_address')}
+                    </a></em>
                 </p>
                 <div className="success-actions">
                     <button className="btn btn-outline" onClick={() => navigate('/')}>

@@ -16,8 +16,8 @@
   --gold-light: #E8D08A;
   --gold-dark: #FDF8F0;
   /* Brighter for contrast */
-  --cream: transparent;
-  --cream-dark: transparent;
+  --cream: #fff;
+  --cream-dark: #f9f6f0;
   --green: #81C784;
   --green-light: #A5D6A7;
   --green-dark: #2E7D32;
@@ -28,7 +28,7 @@
   --dark-mid: #FDF8F0;
   --text-body: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.75);
-  --white: transparent;
+  --white: #ffffff;
   --red: #FF5252;
   --red-light: rgba(255, 82, 82, 0.15);
   --shadow-sm: none;
@@ -165,17 +165,18 @@ h4 {
   cursor: pointer;
   transition: var(--transition);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .btn-gold {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-  color: var(--white);
-  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.4);
+  color: #1a1a1a; /* Dark text for better contrast on gold */
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
 }
 
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.5);
+  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.4);
 }
 
 .btn-outline {
@@ -221,6 +222,11 @@ h4 {
 .btn-sm {
   padding: 8px 18px;
   font-size: 0.8rem;
+}
+
+.btn-xs {
+  padding: 6px 14px;
+  font-size: 0.7rem;
 }
 
 .btn:disabled {
@@ -415,4 +421,20 @@ h4 {
   100% {
     box-shadow: 0 0 0 0 rgba(136, 158, 129, 0);
   }
+}
+/* ---- Address Link ---- */
+.address-link {
+  color: var(--gold-light);
+  text-decoration: none;
+  transition: var(--transition);
+  display: inline-block;
+  cursor: pointer;
+  border-bottom: 1px dashed rgba(232, 208, 138, 0.3);
+  padding-bottom: 2px;
+}
+
+.address-link:hover {
+  color: #fff;
+  border-bottom-color: var(--gold-light);
+  transform: translateY(-1px);
 }

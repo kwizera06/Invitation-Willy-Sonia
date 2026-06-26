@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { submitRsvp, verifyInviteCode } from '../api';
@@ -25,18 +25,7 @@ export default function RSVPForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const code = params.get('code');
-        if (!code) {
-            navigate('/');
-            return;
-        }
-        setInviteCode(code);
-        checkCode(code);
-    }, [location.search]);
-
-    const checkCode = async (code) => {
+    const checkCode = useCallback(async (code) => {
         try {
             const res = await verifyInviteCode(code);
             if (!res.data || !res.data.valid || res.data.status !== 'PENDING') {
@@ -49,7 +38,18 @@ export default function RSVPForm() {
             console.error('Verify failed:', err);
             navigate('/');
         }
-    };
+    }, [navigate, t]);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const code = params.get('code');
+        if (!code) {
+            navigate('/');
+            return;
+        }
+        setInviteCode(code);
+        checkCode(code);
+    }, [location.search, navigate, checkCode]);
 
     const updateMember = (index, field, value) => {
         setMembers(prev => {

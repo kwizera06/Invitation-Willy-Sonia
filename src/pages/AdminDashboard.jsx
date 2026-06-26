@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllGuests, acceptGuest, deleteGuest, generateInviteCodes, getInviteLinks } from '../api';
 import { useTranslation } from 'react-i18next';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import './AdminDashboard.css';
 
 const FOOD_ICONS = {
@@ -50,7 +52,7 @@ export default function AdminDashboard() {
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
-    const [filterType, setFilterType] = useState('all');
+    const [filterType] = useState('all');
     const [filterFood, setFilterFood] = useState('all');   // all | chicken_supreme | short_rib
     const [filterSide, setFilterSide] = useState('all');   // all | willy | sonia
     const [actionLoad, setActionLoad] = useState(null);
@@ -59,7 +61,7 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         if (!username || !password) navigate('/admin/login');
-    }, []);
+    }, [username, password, navigate]);
 
     const fetchInviteLinks = useCallback(async () => {
         try {
@@ -112,7 +114,9 @@ export default function AdminDashboard() {
             const res = await getAllGuests(username, password);
             let parsedData = res.data;
             if (typeof parsedData === 'string') {
-                try { parsedData = JSON.parse(parsedData); } catch (e) { }
+                try { parsedData = JSON.parse(parsedData); } catch (err) {
+                    console.error('Failed to parse guests data:', err);
+                }
             }
             let finalGuests = [];
             if (Array.isArray(parsedData)) finalGuests = parsedData;
@@ -129,7 +133,7 @@ export default function AdminDashboard() {
         } finally {
             setLoading(false);
         }
-    }, [username, password]);
+    }, [username, password, navigate, t]);
 
     useEffect(() => { 
         fetchGuests(); 
@@ -187,40 +191,104 @@ export default function AdminDashboard() {
     const validGuests = Array.isArray(guests) ? guests : [];
 
     const filtered = validGuests.filter(g => {
+        if (!g) return false;
         const q = search.toLowerCase();
-        const matchSearch = !q || g.name?.toLowerCase().includes(q) || g.phone?.includes(q);
+        
+        // Defensive string conversions to prevent crashes if data from API/Sheets comes as numbers
+        const name = String(g.name || '').toLowerCase();
+        const phone = String(g.phone || '');
+        
+        const matchSearch = !q || name.includes(q) || phone.includes(q);
         const matchStatus = filterStatus === 'all' || g.status === filterStatus;
-        const matchFood  = filterFood === 'all' || (g.foods && g.foods.includes(filterFood));
+        
+        // Handle foods safely (ensuring it's an array or string before calling includes)
+        const guestFoods = Array.isArray(g.foods) ? g.foods : [];
+        const matchFood  = filterFood === 'all' || guestFoods.includes(filterFood);
+        
         const matchSide  = filterSide === 'all' || g.side === filterSide;
+        
         return matchSearch && matchStatus && matchFood && matchSide;
     });
 
-    const attendingGuests = validGuests.filter(g => g.attending);
+    const attendingGuests = validGuests.filter(g => g?.attending);
     const stats = {
         total:      validGuests.length,
         attending:  attendingGuests.length,
-        accepted:   validGuests.filter(g => g.status === 'ACCEPTED').length,
-        pending:    validGuests.filter(g => g.status === 'PENDING').length,
-        chickenSupreme: attendingGuests.filter(g => g.foods?.includes('chicken_supreme') || g.foods?.includes('duck_confit')).length,
-        shortRib:   attendingGuests.filter(g => g.foods?.includes('short_rib')).length,
-        vegetarian: attendingGuests.filter(g => g.foods?.includes('vegetarian')).length,
-        vegan:      attendingGuests.filter(g => g.foods?.includes('vegan')).length,
-        willy:      validGuests.filter(g => g.side === 'willy').length,
-        sonia:      validGuests.filter(g => g.side === 'sonia').length,
+        accepted:   validGuests.filter(g => g?.status === 'ACCEPTED').length,
+        pending:    validGuests.filter(g => g?.status === 'PENDING').length,
+        chickenSupreme: attendingGuests.filter(g => {
+            const f = Array.isArray(g.foods) ? g.foods : [];
+            return f.includes('chicken_supreme') || f.includes('duck_confit');
+        }).length,
+        shortRib:   attendingGuests.filter(g => Array.isArray(g.foods) && g.foods.includes('short_rib')).length,
+        vegetarian: attendingGuests.filter(g => Array.isArray(g.foods) && g.foods.includes('vegetarian')).length,
+        vegan:      attendingGuests.filter(g => Array.isArray(g.foods) && g.foods.includes('vegan')).length,
+        willy:      validGuests.filter(g => g?.side === 'willy').length,
+        sonia:      validGuests.filter(g => g?.side === 'sonia').length,
     };
 
     const groupGuests = () => {
         const groups = {};
         filtered.forEach(g => {
-            const time = new Date(g.timestamp).getTime();
-            if (!groups[time]) groups[time] = [];
-            groups[time].push(g);
+            if (!g) return;
+            const time = g.timestamp ? new Date(g.timestamp).getTime() : 0;
+            const key = isNaN(time) ? 'unknown' : time;
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(g);
         });
-        let entries = Object.entries(groups).sort((a, b) => b[0] - a[0]);
+        let entries = Object.entries(groups).sort((a, b) => {
+            if (a[0] === 'unknown') return 1;
+            if (b[0] === 'unknown') return -1;
+            return b[0] - a[0];
+        });
         if (filterType !== 'all') {
             entries = entries.filter(([, members]) => inferType(members) === filterType);
         }
         return entries;
+    };
+
+    const handleDownloadPDF = () => {
+        const accepted = validGuests.filter(g => g.status === 'ACCEPTED');
+        
+        if (accepted.length === 0) {
+            alert('No accepted guests to download.');
+            return;
+        }
+
+        const doc = new jsPDF(); // Back to portrait for 3-4 columns
+        
+        // Add Title
+        doc.setFontSize(18);
+        doc.text('Accepted Guest List — Sonia & William Wedding', 14, 20);
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()} — Total Accepted: ${accepted.length}`, 14, 26);
+
+        const tableData = accepted.map((g, index) => [
+            index + 1,
+            g.name || 'Unknown',
+            g.phone || '—',
+            Array.isArray(g.foods) 
+                ? g.foods.map(f => FOOD_LABELS[f.toLowerCase()] || f).join(', ') 
+                : (FOOD_LABELS[String(g.foods).toLowerCase()] || g.foods || '—')
+        ]);
+
+        autoTable(doc, {
+            startY: 32,
+            head: [['No.', 'Guest Name', 'Phone', 'Food Choice']],
+            body: tableData,
+            theme: 'striped',
+            headStyles: { fillColor: [184, 153, 91], textColor: [255, 255, 255] },
+            styles: { fontSize: 10, cellPadding: 4 },
+            columnStyles: {
+                0: { cellWidth: 15 },
+                1: { cellWidth: 70 },
+                2: { cellWidth: 40 },
+            }
+        });
+
+        const fileName = `accepted_guests_${new Date().getFullYear()}_${new Date().getMonth() + 1}_${new Date().getDate()}.pdf`;
+        doc.save(fileName);
     };
 
     return (
@@ -248,7 +316,7 @@ export default function AdminDashboard() {
                     {inviteLinks.length === 0 ? (
                         <div className="card" style={{ padding: '20px', textAlign: 'center' }}>
                             <p className="admin-empty">No invite links generated yet.</p>
-                            <button className="btn btn-highlight btn-sm" onClick={handleGenerateLinks} disabled={genLoading}>
+                            <button className="btn btn-gold btn-xs" onClick={handleGenerateLinks} disabled={genLoading}>
                                 {genLoading ? '…' : '➕ Generate Link'}
                             </button>
                         </div>
@@ -267,7 +335,7 @@ export default function AdminDashboard() {
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <button 
-                                            className="btn btn-highlight btn-sm"
+                                            className="btn btn-gold btn-xs"
                                             onClick={() => copyToClipboard(link.code)}
                                             disabled={link.status === 'USED'}
                                         >
@@ -316,8 +384,11 @@ export default function AdminDashboard() {
                             <option value="PENDING">⏳ Pending</option>
                             <option value="ACCEPTED">✅ Accepted</option>
                         </select>
-                        <button className="btn btn-outline btn-sm" onClick={fetchGuests}>
+                        <button className="btn btn-outline btn-xs" onClick={fetchGuests}>
                             ↻ Refresh
+                        </button>
+                        <button className="btn btn-gold btn-xs" onClick={handleDownloadPDF}>
+                            📄 PDF Report
                         </button>
                     </div>
 

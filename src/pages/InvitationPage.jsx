@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { verifyInviteCode } from '../api';
@@ -43,21 +43,14 @@ export default function InvitationPage() {
     const location = useLocation();
     const { t } = useTranslation();
 
-    const [inviteCode, setInviteCode] = useState(null);
-    const [inviteStatus, setInviteStatus] = useState('CHECKING'); // CHECKING | VALID | INVALID | USED
-
-    useEffect(() => {
+    const inviteCode = useMemo(() => {
         const params = new URLSearchParams(location.search);
-        const code = params.get('code');
-        if (code) {
-            setInviteCode(code);
-            checkCode(code);
-        } else {
-            setInviteStatus('INVALID');
-        }
+        return params.get('code');
     }, [location.search]);
 
-    const checkCode = async (code) => {
+    const [inviteStatus, setInviteStatus] = useState(inviteCode ? 'CHECKING' : 'INVALID');
+
+    const checkCode = useCallback(async (code) => {
         try {
             const res = await verifyInviteCode(code);
             if (res.data && res.data.valid) {
@@ -69,7 +62,16 @@ export default function InvitationPage() {
             console.error('Code verification failed:', err);
             setInviteStatus('INVALID');
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        if (inviteCode) {
+            const timer = setTimeout(() => {
+                checkCode(inviteCode);
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [inviteCode, checkCode]);
 
     const handleConfirmClick = () => {
         if (inviteStatus === 'PENDING') {
@@ -99,10 +101,18 @@ export default function InvitationPage() {
 
                     <div className="divider"><span className="diamond">◆</span></div>
                     <p className="hero-date">{t('wedding_date')}</p>
-                    <p className="hero-location">
-                        {t('location_at')}<br />
-                        40 des sentier, Wakefield, QC, J0X 3G0
-                    </p>
+                    <div className="hero-location">
+                        <a 
+                            href="https://www.google.com/maps/search/?api=1&query=Le+Belvedere+40+des+sentier+Wakefield+QC+J0X+3G0" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="address-link"
+                            title="Open in Google Maps"
+                        >
+                            {t('location_at')}<br />
+                            40 des sentier, Wakefield, QC, J0X 3G0
+                        </a>
+                    </div>
                 </div>
             </section>
 
