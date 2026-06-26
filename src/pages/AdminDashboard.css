@@ -198,6 +198,11 @@
 .search-input:focus {
     border-color: var(--gold);
     background: var(--white);
+    color: #1a1a1a;
+}
+
+.search-input:focus::placeholder {
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .filter-select {
